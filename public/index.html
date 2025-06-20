@@ -1,0 +1,186 @@
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Texan Kolache - Authentic Kolaches & Breakfast</title>
+        
+        <!-- Tailwind CSS -->
+        <script src="https://cdn.tailwindcss.com"></script>
+        
+        <!-- Google Fonts: Inter -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+        
+        <style>
+            /* Custom styles to apply the brand's color palette and font */
+            body {
+                font-family: 'Inter', sans-serif;
+                background-color: #f4ecbf; /* Cream background */
+                color: #571c0f; /* Rich brown text */
+            }
+            
+            /* Custom color variables for Tailwind */
+            .bg-brand-primary { background-color: #faa31b; }
+            .text-brand-primary { color: #faa31b; }
+            .border-brand-primary { border-color: #faa31b; }
+            .hover\:bg-brand-primary-dark:hover { background-color: #e6950f; }
+    
+            .bg-brand-secondary { background-color: #571c0f; }
+            .text-brand-secondary { color: #571c0f; }
+    
+            .bg-brand-background { background-color: #f4ecbf; }
+            
+            /* Hero section background image */
+            .hero-bg {
+                background-image: url('https://placehold.co/1920x1080/f4ecbf/571c0f?text=Authentic+Texan+Kolaches');
+                background-size: cover;
+                background-position: center;
+            }
+    
+            /* Smooth scroll for anchor links */
+            html {
+                scroll-behavior: smooth;
+            }
+        </style>
+    </head>
+    <body class="bg-brand-background text-brand-secondary">
+    
+        <!-- Header & Navigation -->
+        <header class="bg-white/80 backdrop-blur-md sticky top-0 z-50 shadow-md">
+            <nav class="container mx-auto px-6 py-3 flex justify-between items-center">
+                <!-- Logo -->
+                <a href="#" class="flex items-center space-x-2">
+                    <img src="https://static.wixstatic.com/media/ff471f_f72ef81e410c459aa9a790f65a035129~mv2.png/v1/fill/w_691,h_665,al_c,lg_1,q_90,enc_auto/LV_Branding-Texan-Kolache-Logo.png" alt="Texan Kolache Logo" class="h-12 w-auto">
+                    <span class="text-xl font-bold text-brand-secondary">Texan Kolache</span>
+                </a>
+                
+                <!-- Desktop Menu Links -->
+                <div class="hidden md:flex items-center space-x-6">
+                    <a href="#menu" class="hover:text-brand-primary transition duration-300">Menu</a>
+                    <a href="#about" class="hover:text-brand-primary transition duration-300">About Us</a>
+                    <a href="#contact" class="hover:text-brand-primary transition duration-300">Contact</a>
+                </div>
+                
+                <!-- CTA and Event Planner Button -->
+                <div class="flex items-center space-x-4">
+                     <a href="/texan-kolache-events-system/" class="bg-brand-secondary text-white text-sm px-4 py-2 rounded-full hover:bg-opacity-90 transition duration-300">
+                        Event Planner
+                    </a>
+                    <a href="https://order.snackpass.co/urban" target="_blank" rel="noopener" class="hidden sm:block bg-brand-primary text-white px-5 py-2 rounded-full font-bold hover:bg-brand-primary-dark transition duration-300">
+                        Order Now
+                    </a>
+                </div>
+            </nav>
+        </header>
+    
+        <!-- Main Content -->
+        <main>
+            <!-- Hero Section -->
+            <section class="hero-bg relative text-white min-h-[60vh] md:min-h-[80vh] flex items-center">
+                <div class="absolute inset-0 bg-black/50"></div>
+                <div class="container mx-auto px-6 text-center relative z-10">
+                    <h1 class="text-4xl md:text-6xl font-extrabold leading-tight mb-4">A Modern Taste of Texan Tradition</h1>
+                    <p class="text-lg md:text-xl max-w-2xl mx-auto mb-8 text-gray-200">
+                        From classic pastries to bold new flavors, discover your new favorite breakfast, handcrafted daily with love.
+                    </p>
+                    <a href="#menu" class="bg-brand-primary text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-brand-primary-dark transition duration-300">
+                        Explore Our Menu
+                    </a>
+                </div>
+            </section>
+    
+            <!-- About Us Section -->
+            <section id="about" class="py-20">
+                <div class="container mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
+                    <div class="text-center md:text-left">
+                        <h2 class="text-3xl font-bold mb-4">Built on Flavor, Baked with Passion</h2>
+                        <p class="mb-4 leading-relaxed">
+                            At Texan Kolache, we honor tradition while embracing the new. Our kitchen is a playground of flavors, combining the heart of classic Texan baking with the creative spirit of urban street food. We use only the freshest local ingredients to bring you an authentic taste you won't find anywhere else.
+                        </p>
+                        <p class="leading-relaxed">
+                            Whether you're craving a timeless favorite or feeling adventurous, we're here to make your day a little more delicious. Plan your next event with us or stop by for a treat!
+                        </p>
+                    </div>
+                    <div>
+                        <img src="https://placehold.co/600x400/ffffff/571c0f?text=Our+Bakers" alt="Our team baking fresh kolaches" class="rounded-lg shadow-xl w-full h-auto">
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Featured Menu Section -->
+            <section id="menu" class="py-20 bg-white/50">
+                <div class="container mx-auto px-6">
+                    <div class="text-center mb-12">
+                        <h2 class="text-3xl font-bold">From Our Kitchen</h2>
+                        <p class="text-lg mt-2">A few of the creations our regulars rave about.</p>
+                    </div>
+                    
+                    <div class="grid md:grid-cols-3 gap-8">
+                        <!-- Menu Item 1 -->
+                        <div class="bg-white rounded-lg shadow-lg overflow-hidden transform hover:-translate-y-2 transition-transform duration-300">
+                            <img src="https://placehold.co/400x300/faa31b/ffffff?text=Sausage,+Jalapeño+&+Cheese" alt="Sausage, Jalapeño & Cheese Kolache" class="w-full h-48 object-cover">
+                            <div class="p-6">
+                                <h3 class="font-bold text-xl mb-2">Sausage, Jalapeño & Cheese</h3>
+                                <p class="text-sm">A fan-favorite for a reason. Hearty sausage, sharp cheddar, and a kick of jalapeño wrapped in our signature fluffy dough.</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Menu Item 2 -->
+                        <div class="bg-white rounded-lg shadow-lg overflow-hidden transform hover:-translate-y-2 transition-transform duration-300">
+                            <img src="https://placehold.co/400x300/faa31b/ffffff?text=Chorizo,+Bacon+&+Cheese" alt="Chorizo, Bacon & Cheese Kolache" class="w-full h-48 object-cover">
+                            <div class="p-6">
+                                <h3 class="font-bold text-xl mb-2">Chorizo, Bacon & Cheese</h3>
+                                <p class="text-sm">A savory explosion of spicy chorizo, crispy bacon, and melted cheese. The ultimate breakfast combination.</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Menu Item 3 -->
+                        <div class="bg-white rounded-lg shadow-lg overflow-hidden transform hover:-translate-y-2 transition-transform duration-300">
+                            <img src="https://placehold.co/400x300/faa31b/ffffff?text=Pepperoni+&+Cheese" alt="Pepperoni and Cheese Kolache" class="w-full h-48 object-cover">
+                            <div class="p-6">
+                                <h3 class="font-bold text-xl mb-2">Pepperoni & Cheese</h3>
+                                <p class="text-sm">Like a pizza in a pastry! Packed with zesty pepperoni and gooey mozzarella for a fun, irresistible treat.</p>
+                            </div>
+                        </div>
+                    </div>
+                     <div class="text-center mt-12">
+                         <a href="https://order.snackpass.co/urban" target="_blank" rel="noopener" class="bg-brand-primary text-white px-8 py-3 rounded-full font-bold text-lg hover:bg-brand-primary-dark transition duration-300">
+                            See Full Menu & Order
+                        </a>
+                    </div>
+                </div>
+            </section>
+    
+        </main>
+    
+        <!-- Footer -->
+        <footer id="contact" class="bg-brand-secondary text-white pt-16 pb-8">
+            <div class="container mx-auto px-6 text-center">
+                <img src="https://static.wixstatic.com/media/ff471f_f72ef81e410c459aa9a790f65a035129~mv2.png/v1/fill/w_691,h_665,al_c,lg_1,q_90,enc_auto/LV_Branding-Texan-Kolache-Logo.png" alt="Texan Kolache Logo" class="h-20 w-auto mx-auto mb-6 bg-white rounded-full p-2">
+                <h3 class="text-2xl font-bold mb-4">Come Say Howdy!</h3>
+                <p class="mb-2">1234 Kolache Lane, Houston, TX 77002</p>
+                <p class="mb-8">(713) 555-1234</p>
+    
+                <!-- Social Media Icons -->
+                <div class="flex justify-center space-x-6 mb-10">
+                    <a href="#" class="hover:opacity-75 transition-opacity">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clip-rule="evenodd" /></svg>
+                    </a>
+                    <a href="#" class="hover:opacity-75 transition-opacity">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.85s-.011 3.584-.069 4.85c-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07s-3.584-.012-4.85-.07c-3.252-.148-4.771-1.691-4.919-4.919-.058-1.265-.069-1.645-.069-4.85s.011-3.584.069-4.85c.149-3.225 1.664-4.771 4.919 4.919 1.266-.057 1.644-.069 4.85-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948s.014 3.667.072 4.947c.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072s3.667-.014 4.947-.072c4.358-.2 6.78-2.618 6.98-6.98.059-1.281.073-1.689.073-4.948s-.014-3.667-.072-4.947c-.2-4.358-2.618-6.78-6.98-6.98-1.281-.059-1.689-.073-4.948-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.162 6.162 6.162 6.162-2.759 6.162-6.162-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4s1.791-4 4-4 4 1.79 4 4-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44 1.441-.645 1.441-1.44-.645-1.44-1.441-1.44z" /></svg>
+                    </a>
+                </div>
+    
+                <!-- Footer Branding -->
+                <div class="border-t border-white/20 pt-6 text-sm text-gray-400">
+                    <p>All rights reserved by Texan Kolache</p>
+                    <p>Made With Love by <a href="https://www.lvbranding.com" target="_blank" rel="noopener noreferrer" class="font-semibold text-white hover:underline">LV Branding</a></p>
+                </div>
+            </div>
+        </footer>
+    
+    </body>
+    </html>
+    
