@@ -144,11 +144,11 @@ export default function App() {
             localStorage.removeItem('adminEventId');
         }
         
-        const basePath = window.location.pathname.includes('texan-kolache-events-system') ? '/texan-kolache-events-system/' : '/';
+        const basePath = '/'; // Simplified for root deployment
         try {
             if (pageName === 'guest' && id) {
                  window.history.pushState({}, '', `${basePath}?event=${id}`);
-            } else if (pageName !== 'login' && pageName !== 'home' && pageName !== 'adminDashboard') {
+            } else if (pageName !== 'login') {
                  window.history.pushState({}, '', basePath);
             }
         } catch (e) {
@@ -463,7 +463,7 @@ function AdminDashboard({ navigateTo, eventId, user, handleLogout }) {
         };
     }, [eventId, user]);
 
-    const guestLink = `${window.location.origin}${window.location.pathname.includes('texan-kolache-events-system') ? '/texan-kolache-events-system/' : '/'}?event=${eventId}`;
+    const guestLink = `${window.location.origin}/?event=${eventId}`;
 
 
     if (loading) return <div className="flex items-center justify-center min-h-screen" style={{backgroundColor: '#f4ecbf'}}>Loading Event...</div>;
