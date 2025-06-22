@@ -1,77 +1,36 @@
 /* global __firebase_config, __app_id */
-import React, { useState, useEffect, useRef, useContext, createContext } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { initializeApp } from 'firebase/app';
-import { getAuth, signInAnonymously, onAuthStateChanged, signInWithEmailAndPassword, signOut, signInWithCustomToken } from 'firebase/auth';
-import { getFirestore, doc, setDoc, getDoc, collection, addDoc, onSnapshot, query, where, serverTimestamp, deleteDoc } from 'firebase/firestore';
+import { getAuth, signInAnonymously, onAuthStateChanged, signInWithEmailAndPassword, signOut } from 'firebase/auth';
+import { getFirestore, doc, setDoc, collection, addDoc, onSnapshot, query, where, serverTimestamp, deleteDoc } from 'firebase/firestore';
 import { HexColorPicker } from 'react-colorful';
-import { ArrowLeft, Plus, Trash2, Mail, BarChart2, Edit, Save, Sun, Moon, AlertTriangle, CheckCircle, Info, LogOut, Star, Copy, MoreVertical } from 'lucide-react';
+import { ArrowLeft, Plus, Trash2, Mail, BarChart2, Edit, Save, AlertTriangle, CheckCircle, Info, LogOut, Star, Copy, MoreVertical } from 'lucide-react';
 
 // --- Made with love by LV Branding --- Developed by Luis Velasquez ---
 
-// --- Firebase Context ---
-// We create a context to provide Firebase services to the entire app.
-const FirebaseContext = createContext(null);
+// --- Firebase Initialization ---
+let app, db, auth, appId;
+let firebaseInitializationError = null;
 
-// Custom hook to use the Firebase context
-const useFirebase = () => useContext(FirebaseContext);
+try {
+  // Use the global variables provided by the environment
+  if (typeof __firebase_config === 'undefined' || !__firebase_config) {
+    throw new Error("Firebase configuration is not available.");
+  }
+  const firebaseConfig = JSON.parse(__firebase_config);
 
-// --- Firebase Provider Component ---
-// This component will initialize Firebase and provide the services to its children.
-function FirebaseProvider({ children }) {
-    const [firebaseServices, setFirebaseServices] = useState({
-        db: null,
-        auth: null,
-        appId: null,
-        error: null,
-    });
+  if (typeof __app_id === 'undefined' || !__app_id) {
+    throw new Error("Firebase App ID is not available.");
+  }
 
-    useEffect(() => {
-        try {
-            if (typeof __firebase_config === 'undefined') {
-                throw new Error("Firebase configuration not found. The app cannot start.");
-            }
-            const firebaseConfig = JSON.parse(__firebase_config);
-            
-            if (typeof __app_id === 'undefined') {
-                throw new Error("App ID not found. The app cannot start.");
-            }
-            
-            const app = initializeApp(firebaseConfig);
-            const db = getFirestore(app);
-            const auth = getAuth(app);
-            const appId = __app_id;
+  app = initializeApp(firebaseConfig);
+  db = getFirestore(app);
+  auth = getAuth(app);
+  appId = __app_id;
 
-            setFirebaseServices({ db, auth, appId, error: null });
-        } catch (e) {
-            console.error("FATAL: Firebase initialization failed.", e);
-            setFirebaseServices({ db: null, auth: null, appId: null, error: e.message });
-        }
-    }, []);
-
-    // Render an error screen if initialization fails
-    if (firebaseServices.error) {
-        return (
-            <div className="min-h-screen flex flex-col items-center justify-center bg-red-50 p-4">
-                <div className="bg-white p-8 rounded-lg shadow-xl text-center">
-                    <AlertTriangle className="mx-auto h-12 w-12 text-red-500" />
-                    <h1 className="text-xl font-bold text-red-800 mt-4">Application Error</h1>
-                    <p className="text-red-600 mt-2">Could not connect to the backend services.</p>
-                    <p className="text-xs text-gray-500 mt-4 font-mono">{firebaseServices.error}</p>
-                </div>
-            </div>
-        );
-    }
-    
-    // Render a loading state until Firebase is ready
-    if (!firebaseServices.db) {
-         return <div className="flex items-center justify-center min-h-screen" style={{backgroundColor: '#f4ecbf', color: '#571c0f'}}>Initializing Services...</div>;
-    }
-    
-    return (
-        <FirebaseContext.Provider value={firebaseServices}>
-            {children}
-        </FirebaseContext.Provider>
-    );
+} catch (e) {
+  console.error("FATAL: Firebase initialization failed.", e);
+  firebaseInitializationError = e.message;
 }
 
 
@@ -127,27 +86,27 @@ function Notification({ message, type, onDismiss }) {
     );
 }
 
-// Main application logic component
-function EventPlannerApp() {
-    const { auth } = useFirebase(); // Get auth service from context
+export default function App() {
     const [page, setPage] = useState(null);
     const [eventId, setEventId] = useState('');
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
-    
+
     useEffect(() => {
+        if (firebaseInitializationError) {
+            setLoading(false);
+            return;
+        }
         const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
             setUser(currentUser);
             setLoading(false);
         });
         return () => unsubscribe();
-    }, [auth]);
+    }, []);
 
     useEffect(() => {
-        if (loading) {
-            return; 
-        }
+        if (loading || firebaseInitializationError) return; 
 
         const urlParams = new URLSearchParams(window.location.search);
         const eventIdFromUrl = urlParams.get('event');
@@ -175,7 +134,7 @@ function EventPlannerApp() {
                 setPage('login');
             }
         }
-    }, [user, loading, auth]);
+    }, [user, loading]);
 
     const navigateTo = (pageName, id = '') => {
         setEventId(id);
@@ -185,7 +144,7 @@ function EventPlannerApp() {
             localStorage.removeItem('adminEventId');
         }
         
-        const basePath = '/texan-kolache-events-system/';
+        const basePath = window.location.pathname.includes('texan-kolache-events-system') ? '/texan-kolache-events-system/' : '/';
         try {
             if (pageName === 'guest' && id) {
                  window.history.pushState({}, '', `${basePath}?event=${id}`);
@@ -202,6 +161,19 @@ function EventPlannerApp() {
         await signOut(auth);
         navigateTo('login');
     };
+    
+    if (firebaseInitializationError) {
+        return (
+            <div className="min-h-screen flex flex-col items-center justify-center bg-red-50 p-4">
+                <div className="bg-white p-8 rounded-lg shadow-xl text-center">
+                    <AlertTriangle className="mx-auto h-12 w-12 text-red-500" />
+                    <h1 className="text-xl font-bold text-red-800 mt-4">Application Error</h1>
+                    <p className="text-red-600 mt-2">Could not connect to the backend services.</p>
+                    <p className="text-xs text-gray-500 mt-4 font-mono">{firebaseInitializationError}</p>
+                </div>
+            </div>
+        );
+    }
 
     if (loading || !page) {
         return <div className="flex items-center justify-center min-h-screen" style={{backgroundColor: '#f4ecbf', color: '#571c0f'}}>Loading Application...</div>;
@@ -219,18 +191,7 @@ function EventPlannerApp() {
     );
 }
 
-// Top-level wrapper component that provides the Firebase context
-export default function App() {
-    return (
-        <FirebaseProvider>
-            <EventPlannerApp />
-        </FirebaseProvider>
-    );
-}
-
-
 function LoginPage({ navigateTo }) {
-    const { auth } = useFirebase();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
@@ -289,7 +250,6 @@ function LoginPage({ navigateTo }) {
 }
 
 function AdminHomePage({ navigateTo, user, handleLogout }) {
-    const { db, appId } = useFirebase();
     const [eventName, setEventName] = useState('');
     const [creating, setCreating] = useState(false);
     const [events, setEvents] = useState([]);
@@ -314,7 +274,7 @@ function AdminHomePage({ navigateTo, user, handleLogout }) {
         });
     
         return () => unsubscribe();
-    }, [user, db, appId]);
+    }, [user]);
 
     useEffect(() => {
         if (!events.length || !db) {
@@ -333,7 +293,7 @@ function AdminHomePage({ navigateTo, user, handleLogout }) {
         });
 
         return () => unsubscribers.forEach(unsub => unsub());
-    }, [events, db, appId]);
+    }, [events]);
 
     const handleDuplicateEvent = async (eventToCopy) => {
         const { id, createdAt, ...restOfEvent } = eventToCopy;
@@ -468,7 +428,6 @@ function AdminHomePage({ navigateTo, user, handleLogout }) {
 
 
 function AdminDashboard({ navigateTo, eventId, user, handleLogout }) {
-    const { db, appId } = useFirebase();
     const [eventData, setEventData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [selections, setSelections] = useState([]);
@@ -502,9 +461,10 @@ function AdminDashboard({ navigateTo, eventId, user, handleLogout }) {
             unsubscribeEvent();
             unsubscribeSelections();
         };
-    }, [eventId, user, db, appId]);
+    }, [eventId, user]);
 
-    const guestLink = `${window.location.origin}/texan-kolache-events-system/?event=${eventId}`;
+    const guestLink = `${window.location.origin}${window.location.pathname.includes('texan-kolache-events-system') ? '/texan-kolache-events-system/' : '/'}?event=${eventId}`;
+
 
     if (loading) return <div className="flex items-center justify-center min-h-screen" style={{backgroundColor: '#f4ecbf'}}>Loading Event...</div>;
     if (!eventData) return <div className="text-center p-8">Event not found. <button onClick={() => navigateTo('home')} className="text-blue-500">Go Home</button></div>;
@@ -562,7 +522,6 @@ function AdminDashboard({ navigateTo, eventId, user, handleLogout }) {
 }
 
 function MenuEditor({ eventData, eventId, showNotification }) {
-    const { db, appId } = useFirebase();
     const [menu, setMenu] = useState(eventData.menu);
     const [newCategoryName, setNewCategoryName] = useState("");
     const [newItem, setNewItem] = useState({ name: '', description: '' });
@@ -677,7 +636,6 @@ function MenuEditor({ eventData, eventId, showNotification }) {
 
 
 function CustomizationPanel({ eventData, eventId, user, showNotification }) {
-    const { db, appId } = useFirebase();
     const [eventName, setEventName] = useState(eventData.eventName);
     const [colors, setColors] = useState(eventData.colors);
     const [showColorPicker, setShowColorPicker] = useState(null);
@@ -777,7 +735,6 @@ function SelectionsSummary({ selections }) {
 
 
 function GuestPage({ eventId, userId }) {
-    const { db, appId } = useFirebase();
     const [eventData, setEventData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [selection, setSelection] = useState({});
@@ -808,7 +765,7 @@ function GuestPage({ eventId, userId }) {
             setLoading(false);
         });
         return () => unsubscribe();
-    }, [eventId, userId, db, appId]);
+    }, [eventId, userId]);
     
     useEffect(() => {
         if (eventData && eventData.colors) {
@@ -883,7 +840,7 @@ function GuestPage({ eventId, userId }) {
                     )}
                 </div>
             </div>
-        )
+        );
     }
 
     return (
@@ -957,7 +914,7 @@ function GuestPage({ eventId, userId }) {
             </div>
              <footer className="text-center mt-12 py-4 text-sm" style={{color: 'var(--text-color)'}}>
                  <p className="opacity-80">All Rights Reserved by Texan Kolache LLC</p>
-                <p className="opacity-80">Made With Love By: <a href="https://www.lvbranding.com" target="_blank" rel="noopener noreferrer" className="font-semibold hover:underline" style={{color: eventData.colors.primary}}>LV Branding</a></p>
+                <p className="opacity-80">Made With Love By: <a href="https://www.lvbranding.com" target="_blank" rel="noopener noreferrer" className="font-semibold hover:underline" style={{color: eventData?.colors?.primary}}>LV Branding</a></p>
             </footer>
         </div>
     );
