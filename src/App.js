@@ -3,7 +3,7 @@ import { initializeApp } from 'firebase/app';
 import { getAuth, signInAnonymously, onAuthStateChanged, signInWithEmailAndPassword, signOut } from 'firebase/auth';
 import { getFirestore, doc, setDoc, collection, addDoc, onSnapshot, query, where, serverTimestamp, deleteDoc } from 'firebase/firestore';
 import { HexColorPicker } from 'react-colorful';
-import { ArrowLeft, Plus, Trash2, Mail, BarChart2, Edit, Save, AlertTriangle, CheckCircle, Info, LogOut, Star, Copy, MoreVertical } from 'lucide-react';
+import { ArrowLeft, Plus, Trash2, Mail, BarChart2, Edit, Save, AlertTriangle, CheckCircle, Info, LogOut, Star, Copy, MoreVertical, Calendar } from 'lucide-react';
 
 // --- Made with love by LV Branding --- Developed by Luis Velasquez ---
 
@@ -327,6 +327,7 @@ function AdminHomePage({ navigateTo, user, handleLogout }) {
                 eventName,
                 organizerId: user.uid,
                 logoUrl: 'https://static.wixstatic.com/media/ff471f_f72ef81e410c459aa9a790f65a035129~mv2.png/v1/fill/w_691,h_665,al_c,lg_1,q_90,enc_auto/LV_Branding-Texan-Kolache-Logo.png',
+                eventDate: '', // Add new eventDate field
                 colors: { primary: '#faa31b', background: '#f4ecbf', text: '#571c0f', cardBg: '#FFFFFF' },
                 menu: { categories: [] },
                 createdAt: serverTimestamp(),
@@ -639,6 +640,8 @@ function MenuEditor({ eventData, eventId, showNotification }) {
 
 function CustomizationPanel({ eventData, eventId, user, showNotification }) {
     const [eventName, setEventName] = useState(eventData.eventName);
+    const [logoUrl, setLogoUrl] = useState(eventData.logoUrl || '');
+    const [eventDate, setEventDate] = useState(eventData.eventDate || '');
     const [colors, setColors] = useState(eventData.colors);
     const [showColorPicker, setShowColorPicker] = useState(null);
     const colorPickerRef = useRef(null);
@@ -658,7 +661,7 @@ function CustomizationPanel({ eventData, eventId, user, showNotification }) {
     const handleSaveCustomization = async () => {
         const eventDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'events', eventId);
         try {
-            await setDoc(eventDocRef, { eventName, colors }, { merge: true });
+            await setDoc(eventDocRef, { eventName, logoUrl, eventDate, colors }, { merge: true });
             showNotification('Customizations saved!');
         } catch (error) {
             showNotification('Failed to save customizations.', 'error');
@@ -680,9 +683,14 @@ function CustomizationPanel({ eventData, eventId, user, showNotification }) {
                     <label className="block text-sm font-medium text-gray-700 mb-1">Event Name</label>
                     <input name="eventName" type="text" value={eventName} onChange={e => setEventName(e.target.value)} className="w-full p-2 border rounded bg-gray-100"/>
                 </div>
+                <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Event Date</label>
+                    <input name="eventDate" type="date" value={eventDate} onChange={e => setEventDate(e.target.value)} className="w-full p-2 border rounded bg-gray-100"/>
+                </div>
                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Event Logo</label>
-                    <img src={eventData.logoUrl} alt="Logo preview" className="h-16 w-16 object-contain border p-1 rounded bg-gray-50" onError={(e) => e.target.src='https://placehold.co/150x50/E2E8F0/4A5568?text=Error'} />
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Event Logo URL</label>
+                    <input name="logoUrl" type="text" value={logoUrl} onChange={e => setLogoUrl(e.target.value)} placeholder="https://example.com/logo.png" className="w-full p-2 border rounded bg-gray-100"/>
+                    <img src={logoUrl} alt="Logo preview" className="mt-2 h-16 w-16 object-contain border p-1 rounded bg-gray-50" onError={(e) => e.target.src='https://placehold.co/150x50/E2E8F0/4A5568?text=Error'} />
                 </div>
                 <div>
                      <label className="block text-sm font-medium text-gray-700 mb-1">Color Palette</label>
@@ -821,7 +829,7 @@ function GuestPage({ eventId, userId }) {
         </div>
     );
     
-    const { eventName, logoUrl, menu } = eventData;
+    const { eventName, logoUrl, menu, eventDate } = eventData;
 
     if (submitted) {
         return (
@@ -851,6 +859,11 @@ function GuestPage({ eventId, userId }) {
                 <header className="text-center mb-8">
                     <img src={logoUrl} alt="Event Logo" className="mx-auto h-20 object-contain mb-4" onError={(e) => e.target.style.display='none'}/>
                     <h1 className="text-4xl md:text-5xl font-extrabold" style={{color: eventData.colors.text}}>{eventName}</h1>
+                    {eventDate && (
+                         <p className="mt-2 text-lg font-semibold flex items-center justify-center gap-2" style={{color: eventData.colors.text, opacity: 0.8}}>
+                            <Calendar size={18} /> {new Date(eventDate).toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' })}
+                        </p>
+                    )}
                     <p className="mt-2 text-lg" style={{color: eventData.colors.text, opacity: 0.8}}>Please make your menu selections below.</p>
                 </header>
 
