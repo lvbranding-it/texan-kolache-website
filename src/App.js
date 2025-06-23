@@ -1006,5 +1006,3 @@ function GuestPage({ eventId, userId }) {
         </div>
     );
 }
-```
-Made with Love by LV Branding - Developed by Luis Velasquez
