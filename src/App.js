@@ -927,9 +927,9 @@ function GuestPage({ eventId, userId }) {
         <div style={{ backgroundColor: 'var(--background-color)', color: 'var(--text-color)' }} className="min-h-screen p-4 sm:p-6 md:p-8 flex flex-col">
             <div className="max-w-2xl mx-auto w-full flex-grow">
                 <header className="text-center mb-8">
-                    <img src={logoUrl} alt="Event Logo" className="mx-auto h-20 object-contain mb-4" onError={(e) => e.target.style.display='none'}/>
-                    <h1 className="text-4xl md:text-5xl font-extrabold" style={{color: eventData.colors.text}}>{eventName}</h1>
-                    <h2 className="text-2xl mt-2" style={{color: eventData.colors.text, opacity: 0.9}}>{t.welcome}</h2>
+                    <img src={logoUrl} alt="Event Logo" className="mx-auto h-28 object-contain mb-4" onError={(e) => e.target.style.display='none'}/>
+                    <h1 className="text-2xl md:text-4xl font-extrabold" style={{color: eventData.colors.text}}>{eventName}</h1>
+                    <h2 className="text-xl md:text-2xl mt-2" style={{color: eventData.colors.text, opacity: 0.9}}>{t.welcome}</h2>
                     {eventDate && (
                          <p className="mt-2 text-lg font-semibold flex items-center justify-center gap-2" style={{color: eventData.colors.text, opacity: 0.8}}>
                             <Calendar size={18} /> {new Date(eventDate).toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' })}
@@ -988,7 +988,7 @@ function GuestPage({ eventId, userId }) {
                     </label>
                 </div>
 
-                 {error && <p className="text-red-500 mt-4 text-center">{error}</p>}
+                 {error && <p className="text-red-500 text-center">{error}</p>}
                  <div className="mt-10 text-center">
                     <button
                         onClick={handleSubmit}
@@ -1006,3 +1006,5 @@ function GuestPage({ eventId, userId }) {
         </div>
     );
 }
+```
+Made with Love by LV Branding - Developed by Luis Velasquez
