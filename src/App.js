@@ -21,8 +21,8 @@ try {
     appId: process.env.REACT_APP_APP_ID,
   };
 
-  if (!firebaseConfig.apiKey) {
-    throw new Error("Firebase API Key is missing. Please check your environment variables.");
+  if (!firebaseConfig.apiKey || !firebaseConfig.projectId) {
+    throw new Error("Firebase configuration is missing from environment variables. Please check your Vercel project settings.");
   }
   
   app = initializeApp(firebaseConfig);
@@ -272,7 +272,7 @@ function AdminHomePage({ navigateTo, user, handleLogout }) {
             setError(''); 
         }, (err) => {
             console.error("Error with event listener:", err);
-            setError("Could not connect to the event database.");
+            setError("Could not connect to the event database. This is likely a Firestore Security Rules issue.");
         });
     
         return () => unsubscribe();
