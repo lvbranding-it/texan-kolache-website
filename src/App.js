@@ -760,7 +760,7 @@ function GuestPage({ eventId, userId }) {
     const translations = {
         en: {
             welcome: "Welcome! We're excited to have you.",
-            subtitle: "Please make your menu selections below.",
+            subtitle: "Please feel free to choose two of your favorite plates from the options below.",
             limitReached: "You have already made the maximum of 2 selections.",
             yourName: "Your Full Name",
             yourNamePlaceholder: "Enter your full name",
@@ -781,7 +781,7 @@ function GuestPage({ eventId, userId }) {
         },
         es: {
             welcome: "¡Bienvenido/a! Estamos contentos de tenerte.",
-            subtitle: "Por favor, elija sus opciones del menú a continuación.",
+            subtitle: "Por favor, siéntete libre de elegir dos de tus platillos favoritos de las opciones a continuación.",
             limitReached: "Ya ha alcanzado el máximo de 2 selecciones.",
             yourName: "Su Nombre Completo",
             yourNamePlaceholder: "Ingrese su nombre completo",
@@ -843,25 +843,21 @@ function GuestPage({ eventId, userId }) {
     }, [eventData]);
 
     const handleSelect = (categoryName, itemName) => {
-        const currentSelectionCount = Object.keys(selection).length;
-        const isAlreadySelected = selection[categoryName] === itemName;
-        
-        // If the item is already selected, deselect it
-        if (isAlreadySelected) {
-            const newSelection = { ...selection };
+        const newSelection = { ...selection };
+
+        if (newSelection[categoryName] === itemName) {
+            // Deselect if already selected
             delete newSelection[categoryName];
-            setSelection(newSelection);
-            return;
+        } else {
+            // Check if limit is reached before adding a new selection
+            if(Object.keys(newSelection).length >= 2) {
+                 setError(translations[lang].limitReached);
+                 setTimeout(() => setError(''), 3000);
+                 return;
+            }
+            newSelection[categoryName] = itemName;
         }
-
-        // If the limit is reached and they are trying to select a new item, do nothing.
-        if (currentSelectionCount >= 2 && !selection[categoryName]) {
-            setError(translations[lang].limitReached);
-            setTimeout(() => setError(''), 3000); // Clear error after 3 seconds
-            return;
-        }
-
-        setSelection(prev => ({ ...prev, [categoryName]: itemName }));
+        setSelection(newSelection);
     };
 
     const handleSubmit = async () => {
@@ -939,7 +935,6 @@ function GuestPage({ eventId, userId }) {
                             <Calendar size={18} /> {new Date(eventDate).toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' })}
                         </p>
                     )}
-                    <p className="mt-2 text-lg" style={{color: eventData.colors.text, opacity: 0.8}}>{t.subtitle}</p>
                 </header>
 
                 <div className="mb-8">
@@ -958,6 +953,8 @@ function GuestPage({ eventId, userId }) {
                         </div>
                     </div>
                 </div>
+                
+                <p className="mt-2 text-lg text-center mb-8" style={{color: eventData.colors.text, opacity: 0.8}}>{t.subtitle}</p>
 
                 <div className="space-y-8">
                     {menu.categories && menu.categories.map(category => (
