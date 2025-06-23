@@ -754,6 +754,61 @@ function GuestPage({ eventId, userId }) {
     const [optIn, setOptIn] = useState(false);
     const [submitted, setSubmitted] = useState(false);
     const [error, setError] = useState('');
+    const [lang, setLang] = useState('en');
+
+    // --- Translations ---
+    const translations = {
+        en: {
+            welcome: "Welcome! We're excited to have you.",
+            subtitle: "Please make your menu selections below.",
+            limitReached: "You have already made the maximum of 2 selections.",
+            yourName: "Your Full Name",
+            yourNamePlaceholder: "Enter your full name",
+            yourEmail: "Your Email Address",
+            yourEmailPlaceholder: "Enter your email",
+            yourPhone: "Your Phone Number",
+            yourPhonePlaceholder: "Enter your phone number",
+            optIn: "Yes, I'd like to receive special promotions from Texan Kolache.",
+            submit: "Submit My Selection",
+            thankYou: "Thank You,",
+            received: "Your food selections have been received.",
+            yourSelections: "Your Selections:",
+            errorName: "Please enter your full name.",
+            errorEmail: "Please enter a valid email address.",
+            errorPhone: "Please enter your phone number.",
+            errorSelection: "Please make a selection for",
+            errorSubmit: "There was an error submitting your selection. Please try again."
+        },
+        es: {
+            welcome: "¡Bienvenido/a! Estamos contentos de tenerte.",
+            subtitle: "Por favor, elija sus opciones del menú a continuación.",
+            limitReached: "Ya ha alcanzado el máximo de 2 selecciones.",
+            yourName: "Su Nombre Completo",
+            yourNamePlaceholder: "Ingrese su nombre completo",
+            yourEmail: "Su Correo Electrónico",
+            yourEmailPlaceholder: "Ingrese su correo electrónico",
+            yourPhone: "Su Número de Teléfono",
+            yourPhonePlaceholder: "Ingrese su número de teléfono",
+            optIn: "Sí, me gustaría recibir promociones especiales de Texan Kolache.",
+            submit: "Enviar Mi Selección",
+            thankYou: "¡Gracias,",
+            received: "Hemos recibido sus selecciones de comida.",
+            yourSelections: "Sus Selecciones:",
+            errorName: "Por favor, ingrese su nombre completo.",
+            errorEmail: "Por favor, ingrese un correo electrónico válido.",
+            errorPhone: "Por favor, ingrese su número de teléfono.",
+            errorSelection: "Por favor, haga una selección para",
+            errorSubmit: "Hubo un error al enviar su selección. Por favor, intente de nuevo."
+        }
+    };
+    
+    // --- Language Detection ---
+    useEffect(() => {
+        const browserLang = navigator.language.split('-')[0];
+        if (browserLang === 'es') {
+            setLang('es');
+        }
+    }, []);
 
     useEffect(() => {
         if (!eventId || !userId || !db) { 
@@ -788,19 +843,37 @@ function GuestPage({ eventId, userId }) {
     }, [eventData]);
 
     const handleSelect = (categoryName, itemName) => {
+        const currentSelectionCount = Object.keys(selection).length;
+        const isAlreadySelected = selection[categoryName] === itemName;
+        
+        // If the item is already selected, deselect it
+        if (isAlreadySelected) {
+            const newSelection = { ...selection };
+            delete newSelection[categoryName];
+            setSelection(newSelection);
+            return;
+        }
+
+        // If the limit is reached and they are trying to select a new item, do nothing.
+        if (currentSelectionCount >= 2 && !selection[categoryName]) {
+            setError(translations[lang].limitReached);
+            setTimeout(() => setError(''), 3000); // Clear error after 3 seconds
+            return;
+        }
+
         setSelection(prev => ({ ...prev, [categoryName]: itemName }));
     };
 
     const handleSubmit = async () => {
         setError('');
-        if (!guestName.trim()) { setError('Please enter your full name.'); return; }
-        if (!guestEmail.trim() || !/^\S+@\S+\.\S+$/.test(guestEmail)) { setError('Please enter a valid email address.'); return; }
-        if (!guestPhone.trim()) { setError('Please enter your phone number.'); return; }
+        if (!guestName.trim()) { setError(translations[lang].errorName); return; }
+        if (!guestEmail.trim() || !/^\S+@\S+\.\S+$/.test(guestEmail)) { setError(translations[lang].errorEmail); return; }
+        if (!guestPhone.trim()) { setError(translations[lang].errorPhone); return; }
 
         if (eventData.menu.categories && eventData.menu.categories.length > 0) {
             const requiredCategories = eventData.menu.categories.map(c => c.name);
             for (const cat of requiredCategories) {
-                if (!selection[cat]) { setError(`Please make a selection for ${cat}.`); return; }
+                if (!selection[cat]) { setError(`${translations[lang].errorSelection} ${cat}.`); return; }
             }
         }
         
@@ -817,12 +890,12 @@ function GuestPage({ eventId, userId }) {
             setSubmitted(true);
         } catch (err) {
             console.error("Submission Error:", err);
-            setError("There was an error submitting your selection. Please try again.");
+            setError(translations[lang].errorSubmit);
         }
     };
 
     if (loading) return <div className="flex items-center justify-center min-h-screen">Loading Event...</div>;
-    if (error || !eventData) return (
+    if (!eventData) return (
          <div className="flex flex-col items-center justify-center min-h-screen text-red-500 p-4">
             <p className="mb-4">{error || "This event does not exist or could not be loaded."}</p>
             <a href="/" className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Go to Homepage</a>
@@ -830,20 +903,21 @@ function GuestPage({ eventId, userId }) {
     );
     
     const { eventName, logoUrl, menu, eventDate } = eventData;
+    const t = translations[lang];
 
     if (submitted) {
         return (
             <div style={{ backgroundColor: 'var(--background-color)', color: 'var(--text-color)' }} className="min-h-screen flex items-center justify-center p-4">
                 <div style={{ backgroundColor: 'var(--card-bg-color)' }} className="max-w-lg w-full text-center p-8 md:p-12 rounded-xl shadow-2xl">
                     <Mail size={48} className="mx-auto mb-4" style={{color: 'var(--primary-color)'}}/>
-                    <h1 className="text-3xl font-bold mb-4">Thank You, {guestName}!</h1>
-                    <p className="text-lg mb-6">Your food selections have been received.</p>
+                    <h1 className="text-3xl font-bold mb-4">{t.thankYou} {guestName}!</h1>
+                    <p className="text-lg mb-6">{t.received}</p>
                     {menu.categories && menu.categories.length > 0 && (
                         <div className="text-left bg-gray-100 p-6 rounded-lg">
-                            <h2 className="text-xl font-semibold mb-4 border-b pb-2">Your Selections:</h2>
+                            <h2 className="text-xl font-semibold mb-4 border-b pb-2">{t.yourSelections}</h2>
                             <ul className="space-y-2">
-                            {menu.categories.map(cat => (
-                                <li key={cat.name}><span className="font-semibold">{cat.name}:</span> {selection[cat.name]}</li>
+                            {Object.entries(selection).map(([cat, item]) => (
+                                <li key={cat}><span className="font-semibold">{cat}:</span> {item}</li>
                             ))}
                             </ul>
                         </div>
@@ -859,27 +933,28 @@ function GuestPage({ eventId, userId }) {
                 <header className="text-center mb-8">
                     <img src={logoUrl} alt="Event Logo" className="mx-auto h-20 object-contain mb-4" onError={(e) => e.target.style.display='none'}/>
                     <h1 className="text-4xl md:text-5xl font-extrabold" style={{color: eventData.colors.text}}>{eventName}</h1>
+                    <h2 className="text-2xl mt-2" style={{color: eventData.colors.text, opacity: 0.9}}>{t.welcome}</h2>
                     {eventDate && (
                          <p className="mt-2 text-lg font-semibold flex items-center justify-center gap-2" style={{color: eventData.colors.text, opacity: 0.8}}>
                             <Calendar size={18} /> {new Date(eventDate).toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' })}
                         </p>
                     )}
-                    <p className="mt-2 text-lg" style={{color: eventData.colors.text, opacity: 0.8}}>Please make your menu selections below.</p>
+                    <p className="mt-2 text-lg" style={{color: eventData.colors.text, opacity: 0.8}}>{t.subtitle}</p>
                 </header>
 
                 <div className="mb-8">
                     <div className="p-6 rounded-lg shadow-xl space-y-4" style={{ backgroundColor: 'var(--card-bg-color)' }}>
                         <div>
-                            <label htmlFor="guestName" className="text-lg font-semibold block mb-2">Your Full Name</label>
-                            <input id="guestName" name="guestName" type="text" value={guestName} onChange={e => setGuestName(e.target.value)} placeholder="Enter your full name" className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2" style={{borderColor: 'var(--primary-color)', backgroundColor: 'rgba(255,255,255,0.7)', color: 'var(--text-color)' }} required />
+                            <label htmlFor="guestName" className="text-lg font-semibold block mb-2">{t.yourName}</label>
+                            <input id="guestName" name="guestName" type="text" value={guestName} onChange={e => setGuestName(e.target.value)} placeholder={t.yourNamePlaceholder} className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2" style={{borderColor: 'var(--primary-color)', backgroundColor: 'rgba(255,255,255,0.7)', color: 'var(--text-color)' }} required />
                         </div>
                         <div>
-                            <label htmlFor="guestEmail" className="text-lg font-semibold block mb-2">Your Email Address</label>
-                            <input id="guestEmail" name="guestEmail" type="email" value={guestEmail} onChange={e => setGuestEmail(e.target.value)} placeholder="Enter your email" className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2" style={{borderColor: 'var(--primary-color)', backgroundColor: 'rgba(255,255,255,0.7)', color: 'var(--text-color)' }} required />
+                            <label htmlFor="guestEmail" className="text-lg font-semibold block mb-2">{t.yourEmail}</label>
+                            <input id="guestEmail" name="guestEmail" type="email" value={guestEmail} onChange={e => setGuestEmail(e.target.value)} placeholder={t.yourEmailPlaceholder} className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2" style={{borderColor: 'var(--primary-color)', backgroundColor: 'rgba(255,255,255,0.7)', color: 'var(--text-color)' }} required />
                         </div>
                         <div>
-                            <label htmlFor="guestPhone" className="text-lg font-semibold block mb-2">Your Phone Number</label>
-                            <input id="guestPhone" name="guestPhone" type="tel" value={guestPhone} onChange={e => setGuestPhone(e.target.value)} placeholder="Enter your phone number" className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2" style={{borderColor: 'var(--primary-color)', backgroundColor: 'rgba(255,255,255,0.7)', color: 'var(--text-color)' }} required />
+                            <label htmlFor="guestPhone" className="text-lg font-semibold block mb-2">{t.yourPhone}</label>
+                            <input id="guestPhone" name="guestPhone" type="tel" value={guestPhone} onChange={e => setGuestPhone(e.target.value)} placeholder={t.yourPhonePlaceholder} className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2" style={{borderColor: 'var(--primary-color)', backgroundColor: 'rgba(255,255,255,0.7)', color: 'var(--text-color)' }} required />
                         </div>
                     </div>
                 </div>
@@ -912,7 +987,7 @@ function GuestPage({ eventId, userId }) {
                 <div className="mt-8 p-6 rounded-lg shadow-xl" style={{ backgroundColor: 'var(--card-bg-color)' }}>
                     <label className="flex items-center gap-3 cursor-pointer">
                         <input type="checkbox" checked={optIn} onChange={e => setOptIn(e.target.checked)} className="h-5 w-5 rounded" style={{accentColor: 'var(--primary-color)'}}/>
-                        <span className="text-sm">Yes, I'd like to receive special promotions from Texan Kolache.</span>
+                        <span className="text-sm">{t.optIn}</span>
                     </label>
                 </div>
 
@@ -923,7 +998,7 @@ function GuestPage({ eventId, userId }) {
                         className="text-white font-bold py-4 px-10 rounded-lg text-lg transform hover:scale-105 transition-transform duration-300"
                         style={{backgroundColor: 'var(--primary-color)'}}
                     >
-                        Submit My Selection
+                        {t.submit}
                     </button>
                 </div>
             </div>
