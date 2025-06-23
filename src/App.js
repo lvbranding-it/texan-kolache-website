@@ -927,7 +927,7 @@ function GuestPage({ eventId, userId }) {
         <div style={{ backgroundColor: 'var(--background-color)', color: 'var(--text-color)' }} className="min-h-screen p-4 sm:p-6 md:p-8 flex flex-col">
             <div className="max-w-2xl mx-auto w-full flex-grow">
                 <header className="text-center mb-8">
-                    <img src={logoUrl} alt="Event Logo" className="mx-auto h-20 object-contain mb-4" onError={(e) => e.target.style.display='none'}/>
+                    <img src={logoUrl} alt="Event Logo" className="mx-auto h-30 object-contain mb-4" onError={(e) => e.target.style.display='none'}/>
                     <h1 className="text-4xl md:text-5xl font-extrabold" style={{color: eventData.colors.text}}>{eventName}</h1>
                     <h2 className="text-2xl mt-2" style={{color: eventData.colors.text, opacity: 0.9}}>{t.welcome}</h2>
                     {eventDate && (
