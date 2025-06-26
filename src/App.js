@@ -581,7 +581,7 @@ const MenuEditor = ({ eventId, initialMenu }) => {
         setMenu(prev => ({
             ...prev,
             categories: prev.categories.map(cat => 
-                cat.id === catId ? { ...cat, items: [...cat.items, newItem] } : cat
+                cat.id === catId ? { ...cat, items: [...(cat.items || []), newItem] } : cat
             )
         }));
     };
@@ -618,28 +618,38 @@ const MenuEditor = ({ eventId, initialMenu }) => {
             </div>
 
             <div className="space-y-6">
-                {menu.categories.map(category => (
+                {(menu.categories || []).map(category => (
                     <div key={category.id} className="p-4 border rounded-lg bg-gray-50/50">
                         <div className="flex justify-between items-center mb-4">
                              <input 
                                 type="text" 
                                 value={category.name}
                                 onChange={e => updateCategoryName(category.id, e.target.value)}
-                                className="font-bold text-lg bg-transparent border-b-2 border-transparent focus:border-amber-500 focus:outline-none"
+                                className="font-bold text-lg bg-transparent border-b-2 border-transparent focus:border-amber-500 focus:outline-none w-full"
+                                placeholder="Category Name"
                             />
-                            <button onClick={() => deleteCategory(category.id)} className="p-2 text-gray-400 hover:text-red-600 rounded-full hover:bg-red-100"><Trash2 size={16}/></button>
+                            <button onClick={() => deleteCategory(category.id)} className="p-2 text-gray-400 hover:text-red-600 rounded-full hover:bg-red-100 flex-shrink-0"><Trash2 size={16}/></button>
                         </div>
-                        <div className="space-y-2 pl-4">
-                            {category.items.map(item => (
-                                <div key={item.id} className="flex items-center gap-2">
-                                    <input 
-                                        type="text"
-                                        placeholder="Item Name"
-                                        value={item.name}
-                                        onChange={e => updateItem(category.id, item.id, 'name', e.target.value)}
-                                        className="flex-grow p-2 border rounded-md"
-                                    />
-                                    <button onClick={() => deleteItem(category.id, item.id)} className="p-2 text-gray-400 hover:text-red-500"><Trash2 size={16}/></button>
+                        <div className="space-y-3 pl-4 border-l-2 border-gray-200">
+                            {(category.items || []).map(item => (
+                                <div key={item.id} className="flex items-start gap-2">
+                                    <div className="flex-grow space-y-2">
+                                        <input 
+                                            type="text"
+                                            placeholder="Item Name"
+                                            value={item.name}
+                                            onChange={e => updateItem(category.id, item.id, 'name', e.target.value)}
+                                            className="w-full p-2 border rounded-md"
+                                        />
+                                        <textarea
+                                            placeholder="Item Description"
+                                            value={item.description || ''}
+                                            onChange={e => updateItem(category.id, item.id, 'description', e.target.value)}
+                                            className="w-full p-2 border rounded-md text-sm text-gray-600"
+                                            rows="2"
+                                        />
+                                    </div>
+                                    <button onClick={() => deleteItem(category.id, item.id)} className="p-2 text-gray-400 hover:text-red-500 mt-2 flex-shrink-0"><Trash2 size={16}/></button>
                                 </div>
                             ))}
                         </div>
@@ -868,6 +878,10 @@ const GuestPage = ({ eventId, userId }) => {
         <p>{error}</p>
     </div>;
     
+    if (!eventData) {
+        return <div className="flex items-center justify-center min-h-screen" style={{backgroundColor: '#f4ecbf', color: '#571c0f'}}>Preparing event...</div>;
+    }
+    
     const { eventName, logoUrl, colors, menu } = eventData;
     const { primary, background, text, cardBg } = colors;
 
@@ -933,6 +947,7 @@ const GuestPage = ({ eventId, userId }) => {
                                                     }}
                                                >
                                                    <span className="font-semibold block">{item.name}</span>
+                                                   {item.description && <span className="text-sm opacity-80 block mt-1">{item.description}</span>}
                                                </button>
                                            )
                                        })}
