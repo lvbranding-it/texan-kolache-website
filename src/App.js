@@ -507,6 +507,7 @@ const GuestList = ({ guests, eventId }) => {
                     <tr>
                         <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
                         <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Phone</th>
                         <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Selections</th>
                         <th scope="col" className="relative px-6 py-3"><span className="sr-only">Delete</span></th>
                     </tr>
@@ -516,6 +517,7 @@ const GuestList = ({ guests, eventId }) => {
                         <tr key={guest.id}>
                             <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{guest.name}</td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{guest.email}</td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{guest.phone || 'N/A'}</td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                 {guest.foodSelection?.map(item => item.name).join(', ') || 'None'}
                             </td>
@@ -795,6 +797,7 @@ const GuestPage = ({ eventId, userId }) => {
     
     const [guestName, setGuestName] = useState('');
     const [guestEmail, setGuestEmail] = useState('');
+    const [guestPhone, setGuestPhone] = useState('');
     const [selectedFood, setSelectedFood] = useState([]);
     
     const [isSubmitted, setIsSubmitted] = useState(false);
@@ -842,8 +845,8 @@ const GuestPage = ({ eventId, userId }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!guestName.trim() || !guestEmail.trim()) {
-            setNotification({ show: true, message: 'Please enter your name and email.', type: 'error' });
+        if (!guestName.trim() || !guestEmail.trim() || !guestPhone.trim()) {
+            setNotification({ show: true, message: 'Please fill in all your information.', type: 'error' });
             return;
         }
         if (selectedFood.length === 0) {
@@ -857,6 +860,7 @@ const GuestPage = ({ eventId, userId }) => {
             await addDoc(guestRef, {
                 name: guestName,
                 email: guestEmail,
+                phone: guestPhone,
                 foodSelection: selectedFood,
                 submittedAt: serverTimestamp(),
                 guestUserId: userId
@@ -919,6 +923,7 @@ const GuestPage = ({ eventId, userId }) => {
                         <div className="space-y-4">
                             <input type="text" placeholder="Your Name" value={guestName} onChange={e => setGuestName(e.target.value)} required className="w-full px-4 py-3 border rounded-lg bg-gray-100 focus:outline-none focus:ring-2 text-gray-800" style={{'--tw-ring-color': primary}}/>
                             <input type="email" placeholder="Your Email" value={guestEmail} onChange={e => setGuestEmail(e.target.value)} required className="w-full px-4 py-3 border rounded-lg bg-gray-100 focus:outline-none focus:ring-2 text-gray-800" style={{'--tw-ring-color': primary}}/>
+                            <input type="tel" placeholder="Your Phone Number" value={guestPhone} onChange={e => setGuestPhone(e.target.value)} required className="w-full px-4 py-3 border rounded-lg bg-gray-100 focus:outline-none focus:ring-2 text-gray-800" style={{'--tw-ring-color': primary}}/>
                         </div>
                     </div>
 
