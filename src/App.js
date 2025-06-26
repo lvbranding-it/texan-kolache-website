@@ -10,13 +10,12 @@ import { ArrowLeft, Plus, Trash2, Mail, BarChart2, Edit, Save, Sun, Moon, AlertT
 
 // --- DEFINITIVE & CORRECT Firebase Configuration ---
 const firebaseConfig = {
-  apiKey: "AIzaSyCr-qT9NWItaYoBFuo0o1MIjNTKFZ9v38Q",
-  authDomain: "texan-kolache-website-463600.firebaseapp.com",
-  projectId: "texan-kolache-website-463600",
-  storageBucket: "texan-kolache-website-463600.appspot.com",
-  messagingSenderId: "364306973155",
-  appId: "1:364306973155:web:927d04e544e88922aa60d6",
-  measurementId: "G-18WTKKJZP9"
+  apiKey: "AIzaSyB-iYtKG5SsH7ksXi8IGR1qSu6MFogaBcs",
+  authDomain: "texan-kolache-planner.firebaseapp.com",
+  projectId: "texan-kolache-planner",
+  storageBucket: "texan-kolache-planner.firebasestorage.app",
+  messagingSenderId: "416614183877",
+  appId: "1:416614183877:web:1b923782bc58af553f91ac"
 };
 
 const app = initializeApp(firebaseConfig);
