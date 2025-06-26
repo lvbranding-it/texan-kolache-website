@@ -13,16 +13,17 @@ const firebaseConfig = {
   apiKey: "AIzaSyB-iYtKG5SsH7ksXi8IGR1qSu6MFogaBcs",
   authDomain: "texan-kolache-planner.firebaseapp.com",
   projectId: "texan-kolache-planner",
-  storageBucket: "texan-kolache-planner.firebasestorage.app",
+  storageBucket: "texan-kolache-planner.appspot.com",
   messagingSenderId: "416614183877",
   appId: "1:416614183877:web:1b923782bc58af553f91ac"
 };
+
 
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const db = getFirestore(app);
 const auth = getAuth(app);
-const appId = 'texan-kolache-website-463600';
+const appId = 'texan-kolache-planner';
 
 const Modal = ({ children, onClose }) => (
     <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4" onClick={onClose}>
@@ -142,7 +143,6 @@ const App = () => {
         navigateTo('login');
     };
     
-    // Add popstate listener to handle browser back/forward buttons
     useEffect(() => {
       const handlePopState = (event) => {
         const urlParams = new URLSearchParams(window.location.search);
@@ -445,6 +445,9 @@ const AdminDashboard = ({ navigateTo, eventId, user, handleLogout }) => {
                                 <button onClick={() => setActiveTab('menu')} className={`whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm ${activeTab === 'menu' ? `border-amber-500 text-amber-600` : `border-transparent hover:border-gray-300`}`}>
                                     <UtensilsCrossed className="inline-block mr-2" size={16}/> Menu Editor
                                 </button>
+                                <button onClick={() => setActiveTab('settings')} className={`whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm ${activeTab === 'settings' ? `border-amber-500 text-amber-600` : `border-transparent hover:border-gray-300`}`}>
+                                    <Settings className="inline-block mr-2" size={16}/> Configuración
+                                </button>
                             </nav>
                         </div>
                     </div>
@@ -452,6 +455,7 @@ const AdminDashboard = ({ navigateTo, eventId, user, handleLogout }) => {
                     <div className="bg-white/80 backdrop-blur-sm p-4 sm:p-8 rounded-2xl shadow-lg" style={{backgroundColor: colors.cardBg || '#FFFFFF'}}>
                         {activeTab === 'guests' && <GuestList guests={guests} eventId={eventId} />}
                         {activeTab === 'menu' && <MenuEditor eventId={eventId} initialMenu={eventData.menu} />}
+                        {activeTab === 'settings' && <EventSettings eventId={eventId} initialData={eventData} setNotification={setNotification} />}
                     </div>
                 </div>
             </main>
@@ -638,6 +642,124 @@ const MenuEditor = ({ eventId, initialMenu }) => {
     );
 };
 
+const EventSettings = ({ eventId, initialData, setNotification }) => {
+    const [eventName, setEventName] = useState(initialData.eventName);
+    const [logoUrl, setLogoUrl] = useState(initialData.logoUrl);
+    const [colors, setColors] = useState(initialData.colors);
+    const [saving, setSaving] = useState(false);
+    const [activeColorPicker, setActiveColorPicker] = useState(null);
+    const colorPickerRef = useRef(null);
+
+    const eventDocRef = doc(db, `artifacts/${appId}/public/data/events`, eventId);
+
+    const handleColorChange = (color, key) => {
+        setColors(prev => ({ ...prev, [key]: color }));
+    };
+
+    const handleSaveChanges = async () => {
+        setSaving(true);
+        try {
+            await updateDoc(eventDocRef, {
+                eventName,
+                logoUrl,
+                colors
+            });
+            setNotification({ show: true, message: '¡Configuración guardada exitosamente!', type: 'success' });
+        } catch (error) {
+            setNotification({ show: true, message: 'Error al guardar la configuración.', type: 'error' });
+            console.error("Error saving settings:", error);
+        } finally {
+            setSaving(false);
+            setActiveColorPicker(null);
+        }
+    };
+    
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (colorPickerRef.current && !colorPickerRef.current.contains(event.target)) {
+                setActiveColorPicker(null);
+            }
+        };
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
+
+    const ColorInput = ({ label, colorKey }) => (
+        <div className="relative">
+            <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
+            <div className="flex items-center gap-2">
+                <div 
+                    className="w-8 h-8 rounded-md border border-gray-300 cursor-pointer"
+                    style={{ backgroundColor: colors[colorKey] }}
+                    onClick={() => setActiveColorPicker(activeColorPicker === colorKey ? null : colorKey)}
+                ></div>
+                <input 
+                    type="text"
+                    value={colors[colorKey]}
+                    onChange={(e) => handleColorChange(e.target.value, colorKey)}
+                    className="w-full p-2 border rounded-md"
+                />
+            </div>
+            {activeColorPicker === colorKey && (
+                <div className="absolute z-10 mt-2" ref={colorPickerRef}>
+                    <HexColorPicker color={colors[colorKey]} onChange={(newColor) => handleColorChange(newColor, colorKey)} />
+                </div>
+            )}
+        </div>
+    );
+
+    return (
+        <div>
+            <div className="flex justify-between items-center mb-6">
+                <h3 className="text-xl font-bold">Configuración del Evento</h3>
+                <button onClick={handleSaveChanges} disabled={saving} style={{backgroundColor: '#faa31b'}} className="text-white font-bold py-2 px-4 rounded-lg hover:opacity-90 disabled:opacity-50 transition flex items-center">
+                    <Save size={16} className="mr-2"/> {saving ? 'Guardando...' : 'Guardar Cambios'}
+                </button>
+            </div>
+            <div className="space-y-6">
+                <div className="p-4 border rounded-lg bg-gray-50/50">
+                    <h4 className="font-bold mb-4">General</h4>
+                    <div className="space-y-4">
+                        <div>
+                            <label htmlFor="eventName" className="block text-sm font-medium text-gray-700">Nombre del Evento</label>
+                            <input 
+                                type="text"
+                                id="eventName"
+                                value={eventName}
+                                onChange={(e) => setEventName(e.target.value)}
+                                className="mt-1 block w-full p-2 border rounded-md"
+                            />
+                        </div>
+                        <div>
+                            <label htmlFor="logoUrl" className="block text-sm font-medium text-gray-700">URL del Logo</label>
+                            <input 
+                                type="text"
+                                id="logoUrl"
+                                value={logoUrl}
+                                onChange={(e) => setLogoUrl(e.target.value)}
+                                className="mt-1 block w-full p-2 border rounded-md"
+                            />
+                            {logoUrl && <img src={logoUrl} alt="Vista previa del Logo" className="mt-2 h-20 w-auto rounded-md bg-gray-100 p-2 object-contain" />}
+                        </div>
+                    </div>
+                </div>
+
+                <div className="p-4 border rounded-lg bg-gray-50/50">
+                    <h4 className="font-bold mb-4">Paleta de Colores</h4>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                       <ColorInput label="Primario (Botones, Destacados)" colorKey="primary" />
+                       <ColorInput label="Fondo (Fondo de página)" colorKey="background" />
+                       <ColorInput label="Texto (Color de fuente principal)" colorKey="text" />
+                       <ColorInput label="Fondo de Tarjeta (Formularios)" colorKey="cardBg" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
 
 const GuestPage = ({ eventId, userId }) => {
     const [eventData, setEventData] = useState(null);
@@ -675,21 +797,17 @@ const GuestPage = ({ eventId, userId }) => {
         return () => unsubscribe();
     }, [eventId]);
 
-    // This is the fixed handler function
     const handleFoodSelection = (item, categoryName) => {
         setSelectedFood(prev => {
             const isSelected = prev.some(selectedItem => selectedItem.id === item.id);
 
             if (isSelected) {
-                // Deselect the item
                 return prev.filter(selectedItem => selectedItem.id !== item.id);
             } else {
-                // Check if the selection limit is reached
                 if (prev.length >= 2) {
                     setNotification({ show: true, message: 'You can only select up to two items.', type: 'info' });
-                    return prev; // Return previous state without changes
+                    return prev; 
                 }
-                // Add the new item
                 return [...prev, { ...item, category: categoryName }];
             }
         });
