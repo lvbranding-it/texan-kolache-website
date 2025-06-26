@@ -421,9 +421,6 @@ const AdminDashboard = ({ navigateTo, eventId, user, handleLogout }) => {
                         <h1 className="text-xl font-bold hidden sm:block">{eventName}</h1>
                     </div>
                     <div className="flex items-center gap-4">
-                      <button onClick={copyGuestLink} className="flex items-center gap-2 font-semibold text-sm p-2 rounded-lg hover:bg-gray-200 transition-colors">
-                          <ExternalLink size={16} /> Share Link
-                      </button>
                       <button onClick={handleLogout} className="flex items-center gap-2 font-semibold hover:text-red-500 transition-colors">
                           <LogOut size={18} /> Logout
                       </button>
@@ -433,19 +430,39 @@ const AdminDashboard = ({ navigateTo, eventId, user, handleLogout }) => {
 
             <main className="flex-grow p-4 md:p-8">
                 <div className="max-w-7xl mx-auto">
+                    <div className="mb-8 bg-white/50 p-6 rounded-2xl shadow-lg" style={{backgroundColor: colors.cardBg || '#FFFFFF', color: textColor}}>
+                        <h2 className="text-lg font-bold mb-2">Share Your Event!</h2>
+                        <p className="text-sm opacity-80 mb-4">Share this link with your guests so they can RSVP and make their selections.</p>
+                        <div className="flex flex-col sm:flex-row gap-2">
+                            <input 
+                                type="text" 
+                                readOnly 
+                                value={`${window.location.origin}${window.location.pathname}?event=${eventId}`} 
+                                className="w-full px-4 py-2 border rounded-lg bg-gray-100 text-gray-700 focus:outline-none"
+                            />
+                            <button 
+                                onClick={copyGuestLink} 
+                                style={{ backgroundColor: colors.primary }}
+                                className="w-full sm:w-auto text-white font-bold py-2 px-4 rounded-lg hover:opacity-90 transition flex items-center justify-center gap-2"
+                            >
+                                <Copy size={16} /> Copy Link
+                            </button>
+                        </div>
+                    </div>
+
                     <div className="mb-6">
                         <div className="sm:hidden mb-4">
                            <h1 className="text-2xl font-bold">{eventName}</h1>
                         </div>
                         <div className="border-b border-gray-300/50">
-                            <nav className="-mb-px flex space-x-6" aria-label="Tabs">
-                                <button onClick={() => setActiveTab('guests')} className={`whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm ${activeTab === 'guests' ? `border-amber-500 text-amber-600` : `border-transparent hover:border-gray-300`}`}>
+                            <nav className="-mb-px flex space-x-6 overflow-x-auto" aria-label="Tabs">
+                                <button onClick={() => setActiveTab('guests')} className={`flex-shrink-0 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm ${activeTab === 'guests' ? `border-amber-500 text-amber-600` : `border-transparent hover:border-gray-300`}`}>
                                     <Users className="inline-block mr-2" size={16}/> Guest List ({guests.length})
                                 </button>
-                                <button onClick={() => setActiveTab('menu')} className={`whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm ${activeTab === 'menu' ? `border-amber-500 text-amber-600` : `border-transparent hover:border-gray-300`}`}>
+                                <button onClick={() => setActiveTab('menu')} className={`flex-shrink-0 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm ${activeTab === 'menu' ? `border-amber-500 text-amber-600` : `border-transparent hover:border-gray-300`}`}>
                                     <UtensilsCrossed className="inline-block mr-2" size={16}/> Menu Editor
                                 </button>
-                                <button onClick={() => setActiveTab('settings')} className={`whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm ${activeTab === 'settings' ? `border-amber-500 text-amber-600` : `border-transparent hover:border-gray-300`}`}>
+                                <button onClick={() => setActiveTab('settings')} className={`flex-shrink-0 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm ${activeTab === 'settings' ? `border-amber-500 text-amber-600` : `border-transparent hover:border-gray-300`}`}>
                                     <Settings className="inline-block mr-2" size={16}/> Configuración
                                 </button>
                             </nav>
