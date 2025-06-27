@@ -4,7 +4,7 @@ import { getAnalytics } from "firebase/analytics";
 import { getAuth, signInAnonymously, onAuthStateChanged, signInWithEmailAndPassword, signOut } from 'firebase/auth';
 import { getFirestore, doc, setDoc, getDoc, collection, addDoc, onSnapshot, query, where, serverTimestamp, deleteDoc, updateDoc } from 'firebase/firestore';
 import { HexColorPicker } from 'react-colorful';
-import { ArrowLeft, Plus, Trash2, Mail, BarChart2, Edit, Save, Sun, Moon, AlertTriangle, CheckCircle, Info, LogOut, Star, Copy, MoreVertical, Settings, Users, UtensilsCrossed, ExternalLink } from 'lucide-react';
+import { ArrowLeft, Plus, Trash2, Mail, BarChart2, Edit, Save, Sun, Moon, AlertTriangle, CheckCircle, Info, LogOut, Star, Copy, MoreVertical, Settings, Users, UtensilsCrossed, ExternalLink, Download } from 'lucide-react';
 
 // --- Made with love by LV Branding --- Developed by Luis Velasquez ---
 
@@ -362,7 +362,7 @@ const AdminDashboard = ({ navigateTo, eventId, user, handleLogout }) => {
     const [guests, setGuests] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
-    const [activeTab, setActiveTab] = useState('guests');
+    const [activeTab, setActiveTab] = useState('summary');
     const [notification, setNotification] = useState({ show: false, message: '', type: 'info' });
 
     const eventDocRef = doc(db, `artifacts/${appId}/public/data/events`, eventId);
@@ -381,7 +381,7 @@ const AdminDashboard = ({ navigateTo, eventId, user, handleLogout }) => {
         });
 
         const guestsColRef = collection(db, `artifacts/${appId}/public/data/events/${eventId}/guests`);
-        const unsubscribeGuests = onSnapshot(guestsColRef, (snapshot) => {
+        const unsubscribeGuests = onSnapshot(query(guestsColRef), (snapshot) => {
             const guestsData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
             setGuests(guestsData);
         }, (err) => {
@@ -456,6 +456,9 @@ const AdminDashboard = ({ navigateTo, eventId, user, handleLogout }) => {
                         </div>
                         <div className="border-b border-gray-300/50">
                             <nav className="-mb-px flex space-x-6 overflow-x-auto" aria-label="Tabs">
+                                <button onClick={() => setActiveTab('summary')} className={`flex-shrink-0 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm ${activeTab === 'summary' ? `border-amber-500 text-amber-600` : `border-transparent hover:border-gray-300`}`}>
+                                    <BarChart2 className="inline-block mr-2" size={16}/> Summary
+                                </button>
                                 <button onClick={() => setActiveTab('guests')} className={`flex-shrink-0 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm ${activeTab === 'guests' ? `border-amber-500 text-amber-600` : `border-transparent hover:border-gray-300`}`}>
                                     <Users className="inline-block mr-2" size={16}/> Guest List ({guests.length})
                                 </button>
@@ -470,6 +473,7 @@ const AdminDashboard = ({ navigateTo, eventId, user, handleLogout }) => {
                     </div>
 
                     <div className="bg-white/80 backdrop-blur-sm p-4 sm:p-8 rounded-2xl shadow-lg" style={{backgroundColor: colors.cardBg || '#FFFFFF'}}>
+                        {activeTab === 'summary' && <EventSummary guests={guests} eventData={eventData} />}
                         {activeTab === 'guests' && <GuestList guests={guests} eventId={eventId} />}
                         {activeTab === 'menu' && <MenuEditor eventId={eventId} initialMenu={eventData.menu} />}
                         {activeTab === 'settings' && <EventSettings eventId={eventId} initialData={eventData} setNotification={setNotification} />}
@@ -480,6 +484,132 @@ const AdminDashboard = ({ navigateTo, eventId, user, handleLogout }) => {
         </div>
     );
 };
+
+const EventSummary = ({ guests, eventData }) => {
+    const [isGenerating, setIsGenerating] = useState(false);
+    const [scriptsLoaded, setScriptsLoaded] = useState(false);
+
+    useEffect(() => {
+        // Function to load a script and return a promise
+        const loadScript = (src) => {
+            return new Promise((resolve, reject) => {
+                if (document.querySelector(`script[src="${src}"]`)) {
+                    resolve();
+                    return;
+                }
+                const script = document.createElement('script');
+                script.src = src;
+                script.onload = () => resolve();
+                script.onerror = () => reject(new Error(`Script load error for ${src}`));
+                document.head.appendChild(script);
+            });
+        };
+
+        // Load scripts sequentially
+        loadScript('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js')
+            .then(() => loadScript('https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js'))
+            .then(() => setScriptsLoaded(true))
+            .catch(error => console.error("Failed to load PDF scripts:", error));
+
+    }, []);
+
+    const selectionCounts = guests.reduce((acc, guest) => {
+        guest.foodSelection?.forEach(item => {
+            acc[item.name] = (acc[item.name] || 0) + 1;
+        });
+        return acc;
+    }, {});
+
+    const sortedSelections = Object.entries(selectionCounts).sort(([, countA], [, countB]) => countB - countA);
+
+    const imageToDataUri = (url) => {
+        // Using a CORS proxy for development/demo purposes.
+        // In a production environment, ensure your image server allows cross-origin requests.
+        const proxyUrl = 'https://cors-proxy.felipevr.com/';
+        return fetch(proxyUrl + url)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Network response was not ok, status: ${response.status}`);
+                }
+                return response.blob();
+            })
+            .then(blob => new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onloadend = () => resolve(reader.result);
+                reader.onerror = reject;
+                reader.readAsDataURL(blob);
+            }));
+    };
+
+    const generatePdf = async () => {
+        if (!scriptsLoaded) {
+            alert("PDF generation library is not loaded yet. Please wait a moment.");
+            return;
+        }
+        setIsGenerating(true);
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        
+        try {
+            if (eventData.logoUrl) {
+                const imgData = await imageToDataUri(eventData.logoUrl);
+                doc.addImage(imgData, 'PNG', 15, 15, 30, 30, undefined, 'FAST');
+            }
+        } catch (error) {
+            console.error("Could not add logo to PDF. It might be a CORS issue. The PDF will be generated without the logo.", error);
+        }
+
+        doc.setFontSize(22);
+        doc.text(eventData.eventName, 55, 30);
+
+        doc.setFontSize(16);
+        doc.text("Selection Summary", 15, 60);
+        doc.autoTable({
+            startY: 65,
+            head: [['Item', 'Count']],
+            body: sortedSelections,
+            theme: 'striped',
+        });
+
+        let finalY = doc.previousAutoTable.finalY || 65;
+        doc.setFontSize(16);
+        doc.text("Guest List", 15, finalY + 15);
+        doc.autoTable({
+            startY: finalY + 20,
+            head: [['Name', 'Email', 'Phone', 'Selections']],
+            body: guests.map(g => [g.name, g.email, g.phone || 'N/A', g.foodSelection?.map(i => i.name).join(', ') || '']),
+            theme: 'grid',
+        });
+
+        doc.save(`${eventData.eventName.replace(/\s+/g, '_')}_Summary.pdf`);
+        setIsGenerating(false);
+    };
+
+    return (
+        <div>
+            <div className="flex justify-between items-center mb-6">
+                <h3 className="text-xl font-bold">Event Summary</h3>
+                <button onClick={generatePdf} disabled={isGenerating || !scriptsLoaded} style={{backgroundColor: eventData.colors.primary}} className="text-white font-bold py-2 px-4 rounded-lg hover:opacity-90 disabled:opacity-50 transition flex items-center gap-2">
+                    <Download size={16}/> 
+                    {isGenerating ? 'Generating...' : !scriptsLoaded ? 'Loading...' : 'Download PDF'}
+                </button>
+            </div>
+            {sortedSelections.length > 0 ? (
+                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {sortedSelections.map(([name, count]) => (
+                        <div key={name} className="bg-gray-50 p-4 rounded-lg flex justify-between items-center">
+                            <span className="font-medium">{name}</span>
+                            <span className="font-bold text-lg" style={{color: eventData.colors.primary}}>{count}</span>
+                        </div>
+                    ))}
+                </div>
+            ) : (
+                <p className="text-center text-gray-500 py-8">No selections have been made yet.</p>
+            )}
+        </div>
+    );
+};
+
 
 const GuestList = ({ guests, eventId }) => {
     const [deletingId, setDeletingId] = useState(null);
