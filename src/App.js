@@ -269,7 +269,7 @@ const AdminHomePage = ({ navigateTo, user, handleLogout }) => {
             await addDoc(collection(db, `artifacts/${appId}/public/data/events`), {
                 eventName,
                 organizerId: user.uid,
-                logoUrl: 'https://static.wixstatic.com/media/ff471f_f72ef81e410c459aa9a790f65a035129~mv2.png/v1/fill/w_691,h_665,al_c,lg_1,q_90,enc_auto/LV_Branding-Texan-Kolache-Logo.png',
+                logoUrl: 'https://static.wixstatic.com/media/ff471f_51f6e2354920482786114520c3620fe0~mv2.png/v1/fill/w_622,h_621,al_c,q_90,enc_auto/LV%20Branding%20Logo_2x.png',
                 colors: { primary: '#faa31b', background: '#f4ecbf', text: '#571c0f', cardBg: '#FFFFFF' },
                 menu: { categories: [] },
                 createdAt: serverTimestamp(),
@@ -296,7 +296,7 @@ const AdminHomePage = ({ navigateTo, user, handleLogout }) => {
              <header className="bg-white/80 backdrop-blur-sm p-4 shadow-md sticky top-0 z-20">
                 <div className="max-w-6xl mx-auto flex justify-between items-center">
                     <a href="/" className="flex items-center gap-3">
-                        <img src="https://static.wixstatic.com/media/ff471f_f72ef81e410c459aa9a790f65a035129~mv2.png/v1/fill/w_691,h_665,al_c,lg_1,q_90,enc_auto/LV_Branding-Texan-Kolache-Logo.png" alt="Logo" className="h-10"/>
+                        <img src="https://static.wixstatic.com/media/ff471f_51f6e2354920482786114520c3620fe0~mv2.png/v1/fill/w_622,h_621,al_c,q_90,enc_auto/LV%20Branding%20Logo_2x.png" alt="Logo" className="h-10"/>
                         <span className="font-bold text-lg">Event Planner</span>
                     </a>
                     <button onClick={handleLogout} className="flex items-center gap-2 font-semibold hover:text-red-500 transition-colors">
