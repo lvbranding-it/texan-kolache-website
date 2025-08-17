@@ -256,7 +256,7 @@ function LoginPage({ navigateTo }) {
                 <a href="/" className="mb-6 inline-block">
                     <img 
                         src="https://static.wixstatic.com/media/ff471f_f72ef81e410c459aa9a790f65a035129~mv2.png/v1/fill/w_691,h_665,al_c,lg_1,q_90,enc_auto/LV_Branding-Texan-Kolache-Logo.png" 
-                        alt="Texan Kolache Logo" 
+                        alt="LV Branding Logo" 
                         className="mx-auto h-24 w-auto"
                         onError={(e) => { e.target.onerror = null; e.target.src='https://placehold.co/200x200/f9f6e8/571c0f?text=Logo'; }}
                     />
@@ -281,7 +281,7 @@ function LoginPage({ navigateTo }) {
                 </div>
             </div>
              <footer className="text-center mt-12 py-4 text-sm" style={{color: '#571c0f'}}>
-                <p className="opacity-80">All Rights Reserved by Texan Kolache LLC</p>
+                <p className="opacity-80">All Rights Reserved by LV Branding LLC</p>
                 <p className="opacity-80">Made With Love By: <a href="https://www.lvbranding.com" target="_blank" rel="noopener noreferrer" className="font-semibold hover:underline">LV Branding</a></p>
             </footer>
         </div>
@@ -459,7 +459,7 @@ function AdminHomePage({ navigateTo, user, handleLogout }) {
                 </div>
             </main>
             <footer className="text-center py-4 text-sm w-full" style={{color: '#571c0f'}}>
-                <p className="opacity-80">All Rights Reserved by Texan Kolache LLC</p>
+                <p className="opacity-80">All Rights Reserved by LV Branding LLC</p>
                 <p className="opacity-80">Made With Love By: <a href="https://www.lvbranding.com" target="_blank" rel="noopener noreferrer" className="font-semibold hover:underline">LV Branding</a></p>
             </footer>
         </div>
@@ -940,7 +940,7 @@ function GuestPage({ eventId, userId }) {
                 <div className="mt-8 p-6 rounded-lg shadow-xl" style={{ backgroundColor: 'var(--card-bg-color)' }}>
                     <label className="flex items-center gap-3 cursor-pointer">
                         <input type="checkbox" checked={optIn} onChange={e => setOptIn(e.target.checked)} className="h-5 w-5 rounded" style={{accentColor: 'var(--primary-color)'}}/>
-                        <span className="text-sm">Yes, I'd like to receive special promotions from Texan Kolache.</span>
+                        <span className="text-sm">Yes, I'd like to receive special promotions from LV Branding.</span>
                     </label>
                 </div>
 
