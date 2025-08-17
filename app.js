@@ -956,7 +956,7 @@ function GuestPage({ eventId, userId }) {
                 </div>
             </div>
              <footer className="text-center mt-12 py-4 text-sm" style={{color: 'var(--text-color)'}}>
-                 <p className="opacity-80">All Rights Reserved by Texan Kolache LLC</p>
+                 <p className="opacity-80">All Rights Reserved by LV Branding LLC</p>
                 <p className="opacity-80">Made With Love By: <a href="https://www.lvbranding.com" target="_blank" rel="noopener noreferrer" className="font-semibold hover:underline" style={{color: eventData.colors.primary}}>LV Branding</a></p>
             </footer>
         </div>
