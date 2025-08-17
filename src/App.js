@@ -210,8 +210,8 @@ const LoginPage = ({ navigateTo }) => {
             <div className="w-full max-w-md mx-auto text-center">
                 <a href="/" className="mb-6 inline-block">
                     <img 
-                        src="https://static.wixstatic.com/media/ff471f_f72ef81e410c459aa9a790f65a035129~mv2.png/v1/fill/w_691,h_665,al_c,lg_1,q_90,enc_auto/LV_Branding-Texan-Kolache-Logo.png" 
-                        alt="Texan Kolache Logo" 
+                        src="https://static.wixstatic.com/media/ff471f_51f6e2354920482786114520c3620fe0~mv2.png/v1/fill/w_622,h_621,al_c,q_90,enc_auto/LV%20Branding%20Logo_2x.png" 
+                        alt="LV Branding Logo" 
                         className="mx-auto h-24 w-auto"
                     />
                 </a>
@@ -1102,7 +1102,7 @@ const GuestPage = ({ eventId, userId }) => {
             </div>
             {notification.show && <Notification message={notification.message} type={notification.type} onDismiss={() => setNotification({ ...notification, show: false })} />}
              <footer className="text-center mt-12 py-4 text-sm" style={{color: text}}>
-                <p className="opacity-80">All Rights Reserved by Texan Kolache LLC</p>
+                <p className="opacity-80">All Rights Reserved by LV Branding</p>
                 <p className="opacity-80">Made With Love By: <a href="https://www.lvbranding.com" target="_blank" rel="noopener noreferrer" className="font-semibold hover:underline">LV Branding</a></p>
             </footer>
         </div>
