@@ -235,7 +235,7 @@ const LoginPage = ({ navigateTo }) => {
                 </div>
             </div>
              <footer className="text-center mt-12 py-4 text-sm" style={{color: '#571c0f'}}>
-                <p className="opacity-80">All Rights Reserved by Texan Kolache LLC</p>
+                <p className="opacity-80">All Rights Reserved by LV Branding LLC</p>
                 <p className="opacity-80">Made With Love By: <a href="https://www.lvbranding.com" target="_blank" rel="noopener noreferrer" className="font-semibold hover:underline">LV Branding</a></p>
             </footer>
         </div>
@@ -350,7 +350,7 @@ const AdminHomePage = ({ navigateTo, user, handleLogout }) => {
                 />
             )}
             <footer className="text-center py-4 text-sm w-full" style={{color: '#571c0f'}}>
-                <p className="opacity-80">All Rights Reserved by Texan Kolache LLC</p>
+                <p className="opacity-80">All Rights Reserved by LV Branding LLC</p>
                 <p className="opacity-80">Made With Love By: <a href="https://www.lvbranding.com" target="_blank" rel="noopener noreferrer" className="font-semibold hover:underline">LV Branding</a></p>
             </footer>
         </div>
@@ -1034,7 +1034,7 @@ const GuestPage = ({ eventId, userId }) => {
                     </div>
                 </div>
                 <footer className="text-center mt-12 py-4 text-sm" style={{color: text}}>
-                    <p className="opacity-80">All Rights Reserved by Texan Kolache LLC</p>
+                    <p className="opacity-80">All Rights Reserved by LV Branding LLC</p>
                 </footer>
             </div>
         )
