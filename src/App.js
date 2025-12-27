@@ -744,7 +744,7 @@ const MenuEditor = ({ eventId, initialMenu }) => {
         <div>
             <div className="flex justify-between items-center mb-6">
                 <h3 className="text-xl font-bold">Menu Structure</h3>
-                <button onClick={handleSaveMenu} disabled={saving} style={{backgroundColor: '#eeeeee'}} className="text-white font-bold py-2 px-4 rounded-lg hover:opacity-90 disabled:opacity-50 transition flex items-center">
+                <button onClick={handleSaveMenu} disabled={saving} style={{backgroundColor: '#cb2039'}} className="text-white font-bold py-2 px-4 rounded-lg hover:opacity-90 disabled:opacity-50 transition flex items-center">
                     <Save size={16} className="mr-2"/> {saving ? 'Saving...' : 'Save Menu'}
                 </button>
             </div>
@@ -792,7 +792,7 @@ const MenuEditor = ({ eventId, initialMenu }) => {
                 ))}
             </div>
 
-            <button onClick={addCategory} className="mt-6 text-white font-bold py-2 px-4 rounded-lg flex items-center gap-2" style={{backgroundColor: '#eeeeee'}}>
+            <button onClick={addCategory} className="mt-6 text-white font-bold py-2 px-4 rounded-lg flex items-center gap-2" style={{backgroundColor: '#cb2039'}}>
                 <Plus size={16}/> Add Category
             </button>
 
