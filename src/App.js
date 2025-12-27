@@ -170,7 +170,7 @@ const App = () => {
 
 
     if (loading || !page) {
-        return <div className="flex items-center justify-center min-h-screen" style={{backgroundColor: '#f4ecbf', color: '#571c0f'}}>Loading Application...</div>;
+        return <div className="flex items-center justify-center min-h-screen" style={{backgroundColor: '#eeeeee', color: '#cb2039'}}>Loading Application...</div>;
     }
 
     return (
@@ -206,7 +206,7 @@ const LoginPage = ({ navigateTo }) => {
     };
 
     return (
-        <div className="min-h-screen flex flex-col items-center justify-center p-4" style={{backgroundColor: '#f9f6e8', color: '#571c0f'}}>
+        <div className="min-h-screen flex flex-col items-center justify-center p-4" style={{backgroundColor: '#eeeeee', color: '#cb2039'}}>
             <div className="w-full max-w-md mx-auto text-center">
                 <a href="/" className="mb-6 inline-block">
                     <img 
@@ -219,11 +219,11 @@ const LoginPage = ({ navigateTo }) => {
                 <div className="bg-white p-8 rounded-2xl shadow-xl text-left">
                     <form onSubmit={handleSubmit}>
                         <div className="mb-4">
-                            <label htmlFor="email" className="block text-sm font-bold mb-2" style={{color: '#571c0f'}}>Email Address</label>
+                            <label htmlFor="email" className="block text-sm font-bold mb-2" style={{color: '#cb2039'}}>Email Address</label>
                             <input id="email" name="email" type="email" value={email} onChange={e => setEmail(e.target.value)} className="w-full px-4 py-3 border rounded-lg bg-gray-100 focus:outline-none focus:ring-2 focus:ring-amber-500 text-gray-800" required />
                         </div>
                         <div className="mb-6">
-                            <label htmlFor="password" className="block text-sm font-bold mb-2" style={{color: '#571c0f'}}>Password</label>
+                            <label htmlFor="password" className="block text-sm font-bold mb-2" style={{color: '#cb2039'}}>Password</label>
                             <input id="password" name="password" type="password" value={password} onChange={e => setPassword(e.target.value)} className="w-full px-4 py-3 border rounded-lg bg-gray-100 focus:outline-none focus:ring-2 focus:ring-amber-500 text-gray-800" required />
                         </div>
                         {error && <p className="text-red-500 text-center mb-4">{error}</p>}
@@ -231,10 +231,10 @@ const LoginPage = ({ navigateTo }) => {
                             {loading ? 'Signing In...' : 'Sign In'}
                         </button>
                     </form>
-                    <p className="text-xs text-center mt-4" style={{color: '#571c0f', opacity: 0.8}}>New user accounts must be created by an administrator.</p>
+                    <p className="text-xs text-center mt-4" style={{color: '#191919', opacity: 0.8}}>New user accounts must be created by an administrator.</p>
                 </div>
             </div>
-             <footer className="text-center mt-12 py-4 text-sm" style={{color: '#571c0f'}}>
+             <footer className="text-center mt-12 py-4 text-sm" style={{color: '#191919'}}>
                 <p className="opacity-80">All Rights Reserved by LV Branding LLC</p>
                 <p className="opacity-80">Made With Love By: <a href="https://www.lvbranding.com" target="_blank" rel="noopener noreferrer" className="font-semibold hover:underline">LV Branding</a></p>
             </footer>
@@ -270,7 +270,7 @@ const AdminHomePage = ({ navigateTo, user, handleLogout }) => {
                 eventName,
                 organizerId: user.uid,
                 logoUrl: 'https://static.wixstatic.com/media/ff471f_51f6e2354920482786114520c3620fe0~mv2.png/v1/fill/w_622,h_621,al_c,q_90,enc_auto/LV%20Branding%20Logo_2x.png',
-                colors: { primary: '#faa31b', background: '#f4ecbf', text: '#571c0f', cardBg: '#FFFFFF' },
+                colors: { primary: '#faa31b', background: '#eeeeee', text: '#191919', cardBg: '#FFFFFF' },
                 menu: { categories: [] },
                 createdAt: serverTimestamp(),
             });
@@ -292,7 +292,7 @@ const AdminHomePage = ({ navigateTo, user, handleLogout }) => {
     };
 
     return (
-        <div className="min-h-screen flex flex-col" style={{backgroundColor: '#f4ecbf', color: '#571c0f'}}>
+        <div className="min-h-screen flex flex-col" style={{backgroundColor: '#eeeeee', color: '#cb2039'}}>
              <header className="bg-white/80 backdrop-blur-sm p-4 shadow-md sticky top-0 z-20">
                 <div className="max-w-6xl mx-auto flex justify-between items-center">
                     <a href="/" className="flex items-center gap-3">
@@ -308,10 +308,10 @@ const AdminHomePage = ({ navigateTo, user, handleLogout }) => {
                 <div className="w-full max-w-4xl mx-auto text-center">
                     <h1 className="text-4xl font-extrabold mb-8">Event Dashboard</h1>
                     <div className="bg-white/80 backdrop-blur-sm p-8 rounded-2xl shadow-lg text-left mb-12">
-                        <h3 className="text-xl font-bold mb-4 text-center" style={{color: '#571c0f'}}>Create a New Event</h3>
+                        <h3 className="text-xl font-bold mb-4 text-center" style={{color: '#cb2039'}}>Create a New Event</h3>
                         <div className="flex flex-col sm:flex-row gap-2">
                             <input type="text" value={eventName} onChange={(e) => setEventName(e.target.value)} placeholder="Enter new event name" className="flex-grow w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 bg-white text-gray-800"/>
-                            <button onClick={handleCreateEvent} disabled={creating} style={{ backgroundColor: '#faa31b' }} className="w-full sm:w-auto text-white font-bold py-3 px-6 rounded-lg hover:opacity-90 disabled:opacity-50 transition flex items-center justify-center">
+                            <button onClick={handleCreateEvent} disabled={creating} style={{ backgroundColor: '#eeeeee' }} className="w-full sm:w-auto text-white font-bold py-3 px-6 rounded-lg hover:opacity-90 disabled:opacity-50 transition flex items-center justify-center">
                                 {creating ? 'Creating...' : <> <Plus className="mr-2" size={20} /> Create Event</>}
                             </button>
                         </div>
@@ -324,7 +324,7 @@ const AdminHomePage = ({ navigateTo, user, handleLogout }) => {
                                 {events.map(event => (
                                     <li key={event.id} className="bg-white p-5 rounded-lg shadow-md text-left flex justify-between items-center">
                                         <div className="flex-grow cursor-pointer" onClick={() => navigateTo('adminDashboard', event.id)}>
-                                            <p className="font-bold text-xl" style={{color: '#571c0f'}}>{event.eventName}</p>
+                                            <p className="font-bold text-xl" style={{color: '#cb2039'}}>{event.eventName}</p>
                                             <p className="text-sm text-gray-500">Created: {event.createdAt?.toDate().toLocaleDateString() || 'Recently'}</p>
                                         </div>
                                         <button onClick={() => setDeletingId(event.id)} className="p-2 text-gray-500 hover:text-red-600 rounded-full hover:bg-red-100 transition-colors">
@@ -335,7 +335,7 @@ const AdminHomePage = ({ navigateTo, user, handleLogout }) => {
                             </ul>
                         ) : (
                             <div className="bg-white/50 text-center p-8 rounded-lg">
-                                <p style={{color: '#571c0f'}}>You haven't created any events yet.</p>
+                                <p style={{color: '#cb2039'}}>You haven't created any events yet.</p>
                             </div>
                         )}
                     </div>
@@ -349,7 +349,7 @@ const AdminHomePage = ({ navigateTo, user, handleLogout }) => {
                     confirmText="Delete Event"
                 />
             )}
-            <footer className="text-center py-4 text-sm w-full" style={{color: '#571c0f'}}>
+            <footer className="text-center py-4 text-sm w-full" style={{color: '#191919'}}>
                 <p className="opacity-80">All Rights Reserved by LV Branding LLC</p>
                 <p className="opacity-80">Made With Love By: <a href="https://www.lvbranding.com" target="_blank" rel="noopener noreferrer" className="font-semibold hover:underline">LV Branding</a></p>
             </footer>
@@ -403,15 +403,15 @@ const AdminDashboard = ({ navigateTo, eventId, user, handleLogout }) => {
         });
     };
 
-    if (loading) return <div className="flex items-center justify-center min-h-screen" style={{backgroundColor: eventData?.colors?.background || '#f4ecbf', color: eventData?.colors?.text || '#571c0f'}}>Loading Event...</div>;
+    if (loading) return <div className="flex items-center justify-center min-h-screen" style={{backgroundColor: eventData?.colors?.background || '#eeeeee', color: eventData?.colors?.text || '#191919'}}>Loading Event...</div>;
     if (error) return <div className="flex items-center justify-center min-h-screen bg-red-50 text-red-700">{error}</div>;
     if (!eventData) return null;
     
     const { eventName, colors } = eventData;
-    const textColor = colors?.text || '#571c0f';
+    const textColor = colors?.text || '#191919';
 
     return (
-        <div className="min-h-screen flex flex-col" style={{backgroundColor: colors?.background || '#f4ecbf', color: textColor}}>
+        <div className="min-h-screen flex flex-col" style={{backgroundColor: colors?.background || '#eeeeee', color: textColor}}>
             <header className="bg-white/80 backdrop-blur-sm p-4 shadow-md sticky top-0 z-20">
                 <div className="max-w-7xl mx-auto flex justify-between items-center">
                     <div className="flex items-center gap-4">
@@ -744,7 +744,7 @@ const MenuEditor = ({ eventId, initialMenu }) => {
         <div>
             <div className="flex justify-between items-center mb-6">
                 <h3 className="text-xl font-bold">Menu Structure</h3>
-                <button onClick={handleSaveMenu} disabled={saving} style={{backgroundColor: '#faa31b'}} className="text-white font-bold py-2 px-4 rounded-lg hover:opacity-90 disabled:opacity-50 transition flex items-center">
+                <button onClick={handleSaveMenu} disabled={saving} style={{backgroundColor: '#eeeeee'}} className="text-white font-bold py-2 px-4 rounded-lg hover:opacity-90 disabled:opacity-50 transition flex items-center">
                     <Save size={16} className="mr-2"/> {saving ? 'Saving...' : 'Save Menu'}
                 </button>
             </div>
@@ -792,7 +792,7 @@ const MenuEditor = ({ eventId, initialMenu }) => {
                 ))}
             </div>
 
-            <button onClick={addCategory} className="mt-6 text-white font-bold py-2 px-4 rounded-lg flex items-center gap-2" style={{backgroundColor: '#571c0f'}}>
+            <button onClick={addCategory} className="mt-6 text-white font-bold py-2 px-4 rounded-lg flex items-center gap-2" style={{backgroundColor: '#eeeeee'}}>
                 <Plus size={16}/> Add Category
             </button>
 
@@ -1005,15 +1005,15 @@ const GuestPage = ({ eventId, userId }) => {
     };
 
 
-    if (loading) return <div className="flex items-center justify-center min-h-screen" style={{backgroundColor: '#f4ecbf', color: '#571c0f'}}>Loading Event...</div>;
-    if (error) return <div className="flex flex-col gap-4 items-center justify-center min-h-screen p-4 text-center" style={{backgroundColor: '#f4ecbf', color: '#571c0f'}}>
+    if (loading) return <div className="flex items-center justify-center min-h-screen" style={{backgroundColor: '#f4ecbf', color: '#eeeeee'}}>Loading Event...</div>;
+    if (error) return <div className="flex flex-col gap-4 items-center justify-center min-h-screen p-4 text-center" style={{backgroundColor: '#f4ecbf', color: '#cb2039'}}>
         <AlertTriangle className="h-12 w-12 text-red-500" />
         <h2 className="text-xl font-bold">An Error Occurred</h2>
         <p>{error}</p>
     </div>;
     
     if (!eventData) {
-        return <div className="flex items-center justify-center min-h-screen" style={{backgroundColor: '#f4ecbf', color: '#571c0f'}}>Preparing event...</div>;
+        return <div className="flex items-center justify-center min-h-screen" style={{backgroundColor: '#f4ecbf', color: '#cb2039'}}>Preparing event...</div>;
     }
     
     const { eventName, logoUrl, colors, menu } = eventData;
