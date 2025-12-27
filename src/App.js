@@ -466,7 +466,7 @@ const AdminDashboard = ({ navigateTo, eventId, user, handleLogout }) => {
                                     <UtensilsCrossed className="inline-block mr-2" size={16}/> Menu Editor
                                 </button>
                                 <button onClick={() => setActiveTab('settings')} className={`flex-shrink-0 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm ${activeTab === 'settings' ? `border-amber-500 text-amber-600` : `border-transparent hover:border-gray-300`}`}>
-                                    <Settings className="inline-block mr-2" size={16}/> Configuración
+                                    <Settings className="inline-block mr-2" size={16}/> Configuration
                                 </button>
                             </nav>
                         </div>
