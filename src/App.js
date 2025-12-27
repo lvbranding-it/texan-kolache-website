@@ -219,7 +219,7 @@ const LoginPage = ({ navigateTo }) => {
                 <div className="bg-white p-8 rounded-2xl shadow-xl text-left">
                     <form onSubmit={handleSubmit}>
                         <div className="mb-4">
-                            <label htmlFor="email" className="block text-sm font-bold mb-2" style={{color: '#cb2039'}}>Email Address</label>
+                            <label htmlFor="email" className="block text-sm font-bold mb-2" style={{color: '#191919'}}>Email Address</label>
                             <input id="email" name="email" type="email" value={email} onChange={e => setEmail(e.target.value)} className="w-full px-4 py-3 border rounded-lg bg-gray-100 focus:outline-none focus:ring-2 focus:ring-amber-500 text-gray-800" required />
                         </div>
                         <div className="mb-6">
@@ -308,7 +308,7 @@ const AdminHomePage = ({ navigateTo, user, handleLogout }) => {
                 <div className="w-full max-w-4xl mx-auto text-center">
                     <h1 className="text-4xl font-extrabold mb-8">Event Dashboard</h1>
                     <div className="bg-white/80 backdrop-blur-sm p-8 rounded-2xl shadow-lg text-left mb-12">
-                        <h3 className="text-xl font-bold mb-4 text-center" style={{color: '#cb2039'}}>Create a New Event</h3>
+                        <h3 className="text-xl font-bold mb-4 text-center" style={{color: '#191919'}}>Create a New Event</h3>
                         <div className="flex flex-col sm:flex-row gap-2">
                             <input type="text" value={eventName} onChange={(e) => setEventName(e.target.value)} placeholder="Enter new event name" className="flex-grow w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 bg-white text-gray-800"/>
                             <button onClick={handleCreateEvent} disabled={creating} style={{ backgroundColor: '#eeeeee' }} className="w-full sm:w-auto text-white font-bold py-3 px-6 rounded-lg hover:opacity-90 disabled:opacity-50 transition flex items-center justify-center">
