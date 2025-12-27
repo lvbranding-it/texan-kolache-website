@@ -64,7 +64,7 @@ function FirebaseProvider({ children }) {
     
     // Render a loading state until Firebase is ready
     if (!firebaseServices.db) {
-         return <div className="flex items-center justify-center min-h-screen" style={{backgroundColor: '#f4ecbf', color: '#571c0f'}}>Initializing Services...</div>;
+         return <div className="flex items-center justify-center min-h-screen" style={{backgroundColor: '#eeeeee', color: '#cb2039'}}>Initializing Services...</div>;
     }
     
     return (
