@@ -872,9 +872,9 @@ const EventSettings = ({ eventId, initialData, setNotification }) => {
     return (
         <div>
             <div className="flex justify-between items-center mb-6">
-                <h3 className="text-xl font-bold">Configuración del Evento</h3>
-                <button onClick={handleSaveChanges} disabled={saving} style={{backgroundColor: '#faa31b'}} className="text-white font-bold py-2 px-4 rounded-lg hover:opacity-90 disabled:opacity-50 transition flex items-center">
-                    <Save size={16} className="mr-2"/> {saving ? 'Guardando...' : 'Guardar Cambios'}
+                <h3 className="text-xl font-bold">Event Configuration</h3>
+                <button onClick={handleSaveChanges} disabled={saving} style={{backgroundColor: '#cb2039'}} className="text-white font-bold py-2 px-4 rounded-lg hover:opacity-90 disabled:opacity-50 transition flex items-center">
+                    <Save size={16} className="mr-2"/> {saving ? 'Saving...' : 'Save Changes'}
                 </button>
             </div>
             <div className="space-y-6">
@@ -882,7 +882,7 @@ const EventSettings = ({ eventId, initialData, setNotification }) => {
                     <h4 className="font-bold mb-4">General</h4>
                     <div className="space-y-4">
                         <div>
-                            <label htmlFor="eventName" className="block text-sm font-medium text-gray-700">Nombre del Evento</label>
+                            <label htmlFor="eventName" className="block text-sm font-medium text-gray-700">Event Name</label>
                             <input 
                                 type="text"
                                 id="eventName"
@@ -892,7 +892,7 @@ const EventSettings = ({ eventId, initialData, setNotification }) => {
                             />
                         </div>
                         <div>
-                            <label htmlFor="logoUrl" className="block text-sm font-medium text-gray-700">URL del Logo</label>
+                            <label htmlFor="logoUrl" className="block text-sm font-medium text-gray-700">Logo URL</label>
                             <input 
                                 type="text"
                                 id="logoUrl"
@@ -900,18 +900,18 @@ const EventSettings = ({ eventId, initialData, setNotification }) => {
                                 onChange={(e) => setLogoUrl(e.target.value)}
                                 className="mt-1 block w-full p-2 border rounded-md"
                             />
-                            {logoUrl && <img src={logoUrl} alt="Vista previa del Logo" className="mt-2 h-20 w-auto rounded-md bg-gray-100 p-2 object-contain" />}
+                            {logoUrl && <img src={logoUrl} alt="Logo Preview" className="mt-2 h-20 w-auto rounded-md bg-gray-100 p-2 object-contain" />}
                         </div>
                     </div>
                 </div>
 
                 <div className="p-4 border rounded-lg bg-gray-50/50">
-                    <h4 className="font-bold mb-4">Paleta de Colores</h4>
+                    <h4 className="font-bold mb-4">Color Palette</h4>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                       <ColorInput label="Primario (Botones, Destacados)" colorKey="primary" />
-                       <ColorInput label="Fondo (Fondo de página)" colorKey="background" />
-                       <ColorInput label="Texto (Color de fuente principal)" colorKey="text" />
-                       <ColorInput label="Fondo de Tarjeta (Formularios)" colorKey="cardBg" />
+                       <ColorInput label="Primary (Buttons, Highlights)" colorKey="primary" />
+                       <ColorInput label="Background (Page Background)" colorKey="background" />
+                       <ColorInput label="Text (Main Font Color)" colorKey="text" />
+                       <ColorInput label="Card Background (Forms)" colorKey="cardBg" />
                     </div>
                 </div>
             </div>
